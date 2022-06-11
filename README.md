@@ -1,4 +1,4 @@
-#### [UPLOADER-BOT](https://t.me/SimpleUploaderV2Bot)
+#### [SIMPLEUPLOADERBOT](https://t.me/SimpleUploaderV2Bot)
 ---
 
 Telegram Bot to Upload Links.
@@ -27,7 +27,7 @@ heroku/python
 ⚠️ AFTER FORK EDIT DEPLOY BUTTON REPLACE WITH YOUR REPO LINK ⚙️
 ```
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy? template=https://github.com/wywxz/UPLOADER-BOT)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https://github.com/wywxz/SimpleUploaderBot)
 
 ## BOT COMMANDS
 
@@ -43,6 +43,6 @@ heroku/python
 * [@SpEcHlDe](https://t.me/ThankTelegram) for his [AnyDLBot](https://telegram.dog/AnyDLBot)
 * [Dan Tès](https://t.me/haskell) for his [Pyrogram Library](https://github.com/pyrogram/pyrogram)
 * [Yoily](https://t.me/YoilyL) for his [UploaditBot](https://telegram.dog/UploaditBot)
-* [@DC4_WARRIOR](https://t.me/Space_X_bots) it's me
+* [@DC4_WARRIOR](https://t.me/Space_X_bots)
 #### LICENSE
 - GPLv3
