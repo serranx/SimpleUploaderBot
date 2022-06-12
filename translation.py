@@ -4,6 +4,10 @@ class Translation(object):
 You can upload HTTP/HTTPS direct link, Using this bot!
 
 /help for more details!"""
+    ADD_CAPTION_HELP = """Select an uploaded file/video or forward me <b>Any Telegram File</b> and Just write the text you want to be on the file <b>as a reply to the file</b> and the text you wrote will be attached as the caption! 🤩
+    
+    Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> 👇
+    """
     FORMAT_SELECTION = "<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>\n\n👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇\n(If your link is a video and if you want it as a streamable video select a video option. If you want your upload in document format select a file option)\n\n<b>Don't select other format options if it shows any!</b>"
     SET_CUSTOM_USERNAME_PASSWORD = """If you want to download premium videos, provide in the following format:
 URL | filename | username | password"""
