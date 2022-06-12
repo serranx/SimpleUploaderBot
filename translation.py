@@ -16,15 +16,41 @@ URL | filename | username | password"""
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_VOID_FORMAT_FOUND = "ERROR...\n<b>YouTubeDL</b> said: {}"
-    HELP_USER = """How to Use Me? Follow These steps!
+    HELP_USER = """🤔 How to Use Me? Follow These steps! 👇
     
-1. Send url (example.domain/File.mp4 | New Filename.mp4).
-2. Send Image As Custom Thumbnail (Optional).
-3. Select the button.
-   SVideo - Give File as video with Screenshots
-   DFile  - Give File (video) as file with Screenshots
-   Video  - Give File as video without Screenshots
-   File   - Give File without Screenshots"""
+<b>1. Send URL</b>
+
+If you want a custom caption on your video/file send the name/text you want to set on the video/file in the following format 👇
+
+<b>Link * caption</b> (without extension). 
+[Separate the link and the caption name with "*" mark].
+
+<b>Example:</b> https://www.website.com/video.mp4 * caption text
+
+👉 The caption/text you type will be automatically set as the custom name of the uploaded file 😎
+
+<i><b>Note:</b> You can change/add any caption later if you want as explained in the end 🥰</i>
+
+<b>2. Then send Custom Thumbnail when asked while uploading the url</b> (This step is optional) 
+
+🔹 It means it is not necessary to send an image to include as an thumbnail.
+If you don't send a thumbnail the video/file will be uploaded with an auto genarated thumbnail from the video.
+The thumbnail you send will be used for your next uploads!
+
+Press /delthumbnail if you want to delete the previously saved thumbnail.
+(then the video will be uploaded with an auto-genarated thumbnail!)
+
+<b>3. Select the button</b>
+  Video-option : Give video/file in video format
+  File-option : Give video/file in file format
+   
+<b>Special feature: 👉 Set caption to any file you want! ✨</b>
+
+🔹 Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file as a reply to the file by selecting it (as replying to a message 😅) and the text you wrote will be attached as caption! 😍
+
+Ex: <a href=''>Send Like This! It's Easy</a> 🥳
+
+"""
     REPLY_TO_MEDIA_ALBUM_TO_GEN_THUMB = "Reply /generatecustomthumbnail to a media album, to generate custom thumbail."
     ERR_ONLY_TWO_MEDIA_IN_ALBUM = """Media Album should contain only two photos. Please re-send the media album, and then try again, or send only two photos in an album."
 You can use /rename command after receiving file to rename it with custom thumbnail support.
