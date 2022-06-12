@@ -20,7 +20,8 @@ URL | filename | username | password"""
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_VOID_FORMAT_FOUND = "ERROR...\n<b>YouTubeDL</b> said: {}"
-    HELP_USER = """🤔 How to Use Me? Follow These steps! 👇
+    HELP_USER = """How to Use Me? 🤔
+    Follow These steps! 👇
     
 <b>1. Send URL</b>
 
