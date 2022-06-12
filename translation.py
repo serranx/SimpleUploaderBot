@@ -48,7 +48,7 @@ Press /delthumbnail if you want to delete the previously saved thumbnail.
 
 🔹 Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file as a reply to the file by selecting it (as replying to a message 😅) and the text you wrote will be attached as caption! 😍
 
-Ex: <a href=''>Send Like This! It's Easy</a> 🥳
+Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>Send Like This! It's Easy</a> 🥳
 
 """
     REPLY_TO_MEDIA_ALBUM_TO_GEN_THUMB = "Reply /generatecustomthumbnail to a media album, to generate custom thumbail."
