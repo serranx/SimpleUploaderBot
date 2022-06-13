@@ -4,7 +4,7 @@ class Translation(object):
 You can upload HTTP/HTTPS direct link, Using this bot!
 
 /help for more details!"""
-    ADD_CAPTION_HELP = """Select an uploaded file/video or forward me <b>Any Telegram File</b> and Just write the text you want to be on the file <b>as a reply to the file</b> and the text you wrote will be attached as the caption! 🤩
+    ADD_CAPTION_HELP = """Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> and the text you wrote will be attached as the caption! 🤩
     
   Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> 👇
     """
