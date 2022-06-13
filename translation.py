@@ -21,7 +21,7 @@ URL | filename | username | password"""
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_VOID_FORMAT_FOUND = "ERROR...\n<b>YouTubeDL</b> said: {}"
     HELP_USER = """<b>How to Use Me?</b> 🤔
-    Follow These steps! 👇
+Follow These steps! 👇
     
 <b>1. Send URL</b>
 
