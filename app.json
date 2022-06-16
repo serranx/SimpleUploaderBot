@@ -14,9 +14,9 @@
     "remote",
     "uploader"
   ],
-  "success_url": "https://t.me/SimpleUploaderV2Bot",
+  "success_url": "https://t.me/SimpleUploaderBot",
   "website": "https://github.com/wywxz",
-  "repository": "https://github.com/wywxz/UPLOADER-BOT",
+  "repository": "https://github.com/wywxz/SimpleUploaderBot",
 
   "env": {
     "WEBHOOK": {
