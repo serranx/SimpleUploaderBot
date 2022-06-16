@@ -1,4 +1,4 @@
-#### [SIMPLEUPLOADERBOT](https://t.me/SimpleUploaderV2Bot)
+#### [SIMPLEUPLOADERBOT](https://t.me/SimpleUploaderBot)
 ---
 
 Telegram Bot to Upload Links.
