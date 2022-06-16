@@ -6,14 +6,13 @@ You can upload HTTP/HTTPS direct link, Using this bot!
 /help for more details!"""
     ADD_CAPTION_HELP = """Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> and the text you wrote will be attached as the caption! 🤩
     
-Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> 👇
-    """
+Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> 👇"""
     FORMAT_SELECTION = "<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>\n\n👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇\n(If your link is a video and if you want it as a streamable video select a video option. If you want your upload in document format select a file option)\n\n<b>Don't select other format options if it shows any!</b>"
     SET_CUSTOM_USERNAME_PASSWORD = """If you want to download premium videos, provide in the following format:
 URL | filename | username | password"""
     DOWNLOAD_START = "<b>File detected: </b>{}\n\n<b>Downloading to my server now...</b> 📥\n\nPlease wait uploading will start as soon as possible 😎"
     UPLOAD_START = "<b>Uploading to Telegram now...</b> 📤"
-    RCHD_TG_API_LIMIT = "Downloaded in {} seconds.\nDetected File Size: {}\nSorry. But, I cannot upload files greater than 2GB due to Telegram API limitations."
+    RCHD_TG_API_LIMIT = "<b>Downloaded in:</b> {} seconds.\n<b>Detected file size:</b> {}\n\nSorry. But, I cannot upload files greater than 2GB due to Telegram API limitations 😕."
     AFTER_SUCCESSFUL_UPLOAD_MSG = "👍 Thanks for using @SimpleUploaderBot."
     AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = "<b>Downloaded in:</b> {} seconds.\n<b>Uploaded in:</b> {} seconds."
     SAVED_CUSTOM_THUMB_NAIL = "Custom video / file thumbnail saved. This image will be used in the video / file."
@@ -53,9 +52,7 @@ Press /delthumbnail if you want to delete the previously saved thumbnail.
 
 🔹 Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file as a reply to the file by selecting it (as replying to a message 😅) and the text you wrote will be attached as caption! 🤩
 
-Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>Send Like This! It's Easy</a> 🥳
-
-"""
+Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>Send Like This! It's Easy</a> 🥳"""
     REPLY_TO_MEDIA_ALBUM_TO_GEN_THUMB = "Reply /generatecustomthumbnail to a media album, to generate custom thumbail."
     ERR_ONLY_TWO_MEDIA_IN_ALBUM = """Media Album should contain only two photos. Please re-send the media album, and then try again, or send only two photos in an album."
 You can use /rename command after receiving file to rename it with custom thumbnail support.
