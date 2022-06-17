@@ -20,7 +20,7 @@ URL | filename | username | password"""
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_VOID_FORMAT_FOUND = "ERROR...\n<b>YouTubeDL</b> said: {}"
     HELP_USER = """<b>How to Use Me?</b> 🤔
-Follow These steps! 👇
+Follow these steps! 👇
     
 <b>1. Send URL</b>
 
@@ -29,13 +29,13 @@ If you want a custom caption on your video/file send the name/text you want to s
 <b>Link * caption</b> (without extension). 
 [Separate the link and the caption name with "*" mark].
 
-<b>Example:</b> https://www.website.com/video.mp4 * caption text
+<b>Example:</b> <code>https://www.website.com/video.mp4 * caption text</code>
 
 👉 The caption/text you type will be automatically set as the custom name of the uploaded file 😎
 
 <i><b>Note:</b> You can change/add any caption later if you want as explained in the end 🥰</i>
 
-<b>2. Then send Custom Thumbnail when asked while uploading the url</b> (This step is optional) 
+<b>2. Then send Custom Thumbnail when asked while uploading the URL</b> (This step is optional) 
 
 🔹 It means it is not necessary to send an image to include as an thumbnail.
 If you don't send a thumbnail the video/file will be uploaded with an auto genarated thumbnail from the video.
@@ -45,6 +45,7 @@ Press /delthumbnail if you want to delete the previously saved thumbnail.
 (then the video will be uploaded with an auto-genarated thumbnail!)
 
 <b>3. Select the button</b>
+
   <u>Video-option</u>: Give video/file in video format
   <u>File-option</u>: Give video/file in file format
    
