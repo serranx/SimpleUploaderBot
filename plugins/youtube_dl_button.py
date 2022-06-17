@@ -87,7 +87,6 @@ async def youtube_dl_call_back(bot, update):
                 l = entity.length
                 youtube_dl_url = youtube_dl_url[o:o + l]
     
-    user = await bot.get_me()
     description = custom_file_name
     if not "." + youtube_dl_ext in custom_file_name:
         custom_file_name += '.' + youtube_dl_ext
