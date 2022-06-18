@@ -23,7 +23,6 @@ from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
-from . import mediafire
 
 @Clinton.on_message(filters.private & ~filters.via_bot & filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
@@ -33,11 +32,6 @@ async def echo(bot, update):
     youtube_dl_password = None
     file_name = None
     url = update.text
-    if 'mediafire.com/' in url:
-        try:
-            url = mediafire.get(url)
-        except:
-            return None
     if "*" in url:
         url_parts = url.split("*")
         if len(url_parts) == 2:
