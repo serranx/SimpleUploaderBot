@@ -23,6 +23,7 @@ from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
+from . import mediafire
 
 @Clinton.on_message(filters.private & ~filters.via_bot & filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
@@ -37,6 +38,11 @@ async def echo(bot, update):
         if len(url_parts) == 2:
             url = url_parts[0]
             file_name = url_parts[1]
+            if 'mediafire.com/' in url:
+                try:
+                    url = mediafire.get(url)
+                except:
+                  return None
         elif len(url_parts) == 4:
             url = url_parts[0]
             file_name = url_parts[1]
@@ -69,6 +75,11 @@ async def echo(bot, update):
                 o = entity.offset
                 l = entity.length
                 url = url[o:o + l]
+    if 'mediafire.com/' in url:
+        try:
+            url = mediafire.get(url)
+        except:
+            return None
     if Config.HTTP_PROXY != "":
         command_to_exec = [
             "yt-dlp",
