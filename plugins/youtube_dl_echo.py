@@ -155,7 +155,7 @@ async def echo(bot, update):
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
-                            "📃 file " + format_ext + " " + approx_file_size + " ",
+                            "📄 file " + format_ext + " " + approx_file_size + " ",
                             callback_data=(cb_string_file).encode("UTF-8")
                         )
                     ]
@@ -177,7 +177,7 @@ async def echo(bot, update):
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
-                            "📃 file " + approx_file_size,
+                            "📄 file " + format_ext + " " + approx_file_size,
                             callback_data=(cb_string_file).encode("UTF-8")
                         )
                     ]
@@ -188,13 +188,13 @@ async def echo(bot, update):
                 cb_string = "{}|{}|{}".format("audio", "320k", "mp3")
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "MP3 (64 kbps)", callback_data=cb_string_64.encode("UTF-8")),
+                        "🎧 MP3 (64 kbps)", callback_data=cb_string_64.encode("UTF-8")),
                     InlineKeyboardButton(
-                        "MP3 (128 kbps)", callback_data=cb_string_128.encode("UTF-8"))
+                        "🎧 MP3 (128 kbps)", callback_data=cb_string_128.encode("UTF-8"))
                 ])
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
+                        "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
             format_id = response_json["format_id"]
@@ -209,7 +209,7 @@ async def echo(bot, update):
                     callback_data=(cb_string_video).encode("UTF-8")
                 ),
                 InlineKeyboardButton(
-                    "📃 file",
+                    "📄 file " + format_ext,
                     callback_data=(cb_string_file).encode("UTF-8")
                 )
             ])
@@ -223,7 +223,7 @@ async def echo(bot, update):
                     callback_data=(cb_string_video).encode("UTF-8")
                 ),
                 InlineKeyboardButton(
-                    "📃 file",
+                    "📄 file " + format_ext,
                     callback_data=(cb_string_file).encode("UTF-8")
                 )
             ])
@@ -249,7 +249,7 @@ async def echo(bot, update):
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📃 file",
+                "📄 file",
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
