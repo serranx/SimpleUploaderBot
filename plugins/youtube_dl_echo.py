@@ -33,16 +33,16 @@ async def echo(bot, update):
     youtube_dl_password = None
     file_name = None
     url = update.text
+    if 'mediafire.com/' in url:
+        try:
+            url = mediafire.get(url)
+        except:
+            return None
     if "*" in url:
         url_parts = url.split("*")
         if len(url_parts) == 2:
             url = url_parts[0]
             file_name = url_parts[1]
-            if 'mediafire.com/' in url:
-                try:
-                    url = mediafire.get(url)
-                except:
-                  return None
         elif len(url_parts) == 4:
             url = url_parts[0]
             file_name = url_parts[1]
@@ -75,11 +75,7 @@ async def echo(bot, update):
                 o = entity.offset
                 l = entity.length
                 url = url[o:o + l]
-    if 'mediafire.com/' in url:
-        try:
-            url = mediafire.get(url)
-        except:
-            return None
+    
     if Config.HTTP_PROXY != "":
         command_to_exec = [
             "yt-dlp",
