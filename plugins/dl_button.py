@@ -26,7 +26,6 @@ from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 # https://stackoverflow.com/a/37631799/4723940
 from PIL import Image
-from . import mediafire
 
 async def ddl_call_back(bot, update):
     logger.info(update)
@@ -37,11 +36,6 @@ async def ddl_call_back(bot, update):
         "/" + str(update.from_user.id) + ".jpg"
     youtube_dl_url = update.message.reply_to_message.text
     custom_file_name = os.path.basename(youtube_dl_url)
-    if 'mediafire.com/' in youtube_dl_url:
-        try:
-            url = mediafire.get(url)
-        except:
-            return None
     if "*" in youtube_dl_url:
         url_parts = youtube_dl_url.split("*")
         if len(url_parts) == 2:
