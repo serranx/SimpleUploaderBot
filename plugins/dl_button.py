@@ -37,7 +37,7 @@ async def ddl_call_back(bot, update):
         "/" + str(update.from_user.id) + ".jpg"
     youtube_dl_url = update.message.reply_to_message.text
     custom_file_name = os.path.basename(youtube_dl_url)
-    if 'mediafire.com/' in url:
+    if 'mediafire.com/' in youtube_dl_url:
         try:
             url = mediafire.get(url)
         except:
