@@ -24,7 +24,7 @@ from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
 
-@Clinton.on_message(filters.private & filters.via_bot & filters.regex(pattern=".*http.*"))
+@Clinton.on_message(filters.private & ~filters.via_bot & filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
     await AddUser(bot, update)
     imog = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
@@ -151,11 +151,11 @@ async def echo(bot, update):
                 if format_string is not None and not "audio only" in format_string:
                     ikeyboard = [
                         InlineKeyboardButton(
-                             "🎥 video " + format_string.split("-")[0] + " " + approx_file_size,
+                             "🎥 video " + format_string.split("-")[0] + " " + approx_file_size + " ",
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
-                            "📄 file " + format_ext + " " + approx_file_size,
+                            "📃 file " + format_ext + " " + approx_file_size + " ",
                             callback_data=(cb_string_file).encode("UTF-8")
                         )
                     ]
@@ -173,11 +173,15 @@ async def echo(bot, update):
                     # special weird case :\
                     ikeyboard = [
                         InlineKeyboardButton(
-                            "🎥 video " + approx_file_size,
+                            "🎥 video [" +
+                            "] ( " +
+                            approx_file_size + " )",
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
-                            "📄 file " + format_ext + " " + approx_file_size,
+                            "📃 file [" +
+                            "] ( " +
+                            approx_file_size + " )",
                             callback_data=(cb_string_file).encode("UTF-8")
                         )
                     ]
@@ -188,13 +192,13 @@ async def echo(bot, update):
                 cb_string = "{}|{}|{}".format("audio", "320k", "mp3")
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎧 MP3 (64 kbps)", callback_data=cb_string_64.encode("UTF-8")),
+                        "MP3 " + "(" + "64 kbps" + ")", callback_data=cb_string_64.encode("UTF-8")),
                     InlineKeyboardButton(
-                        "🎧 MP3 (128 kbps)", callback_data=cb_string_128.encode("UTF-8"))
+                        "MP3 " + "(" + "128 kbps" + ")", callback_data=cb_string_128.encode("UTF-8"))
                 ])
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
+                        "MP3 " + "(" + "320 kbps" + ")", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
             format_id = response_json["format_id"]
@@ -209,7 +213,7 @@ async def echo(bot, update):
                     callback_data=(cb_string_video).encode("UTF-8")
                 ),
                 InlineKeyboardButton(
-                    "📄 file " + format_ext,
+                    "📃 file",
                     callback_data=(cb_string_file).encode("UTF-8")
                 )
             ])
@@ -223,7 +227,7 @@ async def echo(bot, update):
                     callback_data=(cb_string_video).encode("UTF-8")
                 ),
                 InlineKeyboardButton(
-                    "📄 file " + format_ext,
+                    "📃 file",
                     callback_data=(cb_string_file).encode("UTF-8")
                 )
             ])
@@ -249,7 +253,7 @@ async def echo(bot, update):
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📄 file",
+                "📃 file",
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
