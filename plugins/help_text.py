@@ -21,25 +21,6 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-import requests
-import user_agent
-
-@Clinton.on_message(filters.private & filters.command(["mediafire"]))
-async def mediafire_dl(bot, update):
-    url = update.text.split()[1]
-    headers = {"User-Agent": str(user_agent.generate_user_agent())}
-    response = requests.get(url, headers=headers)
-    print(response.text)
-    """
-    await bot.send_message(
-        chat_id=update.chat.id,
-        text=htmlContent.text,
-        parse_mode="html",
-        disable_web_page_preview=True,
-        reply_to_message_id=update.message_id
-    )
-    """
-    
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
     #logger.info(update)
