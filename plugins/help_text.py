@@ -28,7 +28,7 @@ import user_agent
 async def mediafire_dl(bot, update):
     url = update.text.split()[1]
     headers = {"User-Agent": str(user_agent.generate_user_agent())}
-    response = await requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers)
     print(response.text)
     """
     await bot.send_message(
