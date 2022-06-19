@@ -74,8 +74,6 @@ async def youtube_dl_call_back(bot, update):
             youtube_dl_username = youtube_dl_username.strip()
         if youtube_dl_password is not None:
             youtube_dl_password = youtube_dl_password.strip()
-        logger.info(youtube_dl_url)
-        logger.info(custom_file_name)
     else:
         for entity in update.message.reply_to_message.entities:
             if entity.type == "text_link":
@@ -88,6 +86,8 @@ async def youtube_dl_call_back(bot, update):
     description = custom_file_name
     if not "." + youtube_dl_ext in custom_file_name:
         custom_file_name += '.' + youtube_dl_ext
+    logger.info(youtube_dl_url)
+    logger.info(custom_file_name)
     
     await bot.edit_message_text(
         text=Translation.DOWNLOAD_START.format(custom_file_name),
