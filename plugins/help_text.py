@@ -26,16 +26,16 @@ from . import mediafire
 @Clinton.on_message(filters.private & filters.command(["mediafire"]))
 async def mediafire_dl(bot, update):
     # logger.info(update)
-    """
-    url = update.text.split(" ")[1]
+    
+    url = update.text.split()[0]
     try:
         dl_link = await mediafire.get(url)
     except:
         return None
-    """
+    
     await bot.send_message(
         chat_id=update.chat.id,
-        text=update.text,
+        text=dl_link,
         parse_mode="html",
         disable_web_page_preview=True,
         reply_to_message_id=update.message_id
