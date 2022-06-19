@@ -21,6 +21,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+import requests
 import user_agent
 
 @Clinton.on_message(filters.private & filters.command(["mediafire"]))
