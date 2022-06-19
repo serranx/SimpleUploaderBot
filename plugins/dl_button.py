@@ -54,8 +54,6 @@ async def ddl_call_back(bot, update):
         if custom_file_name is not None:
             custom_file_name = custom_file_name.strip()
         # https://stackoverflow.com/a/761825/4723940
-        logger.info(youtube_dl_url)
-        logger.info(custom_file_name)
     else:
         for entity in update.message.reply_to_message.entities:
             if entity.type == "text_link":
@@ -68,6 +66,8 @@ async def ddl_call_back(bot, update):
     description = custom_file_name
     if not "." + youtube_dl_ext in custom_file_name:
         custom_file_name += '.' + youtube_dl_ext
+    logger.info(youtube_dl_url)
+    logger.info(custom_file_name)
     
     start = datetime.now()
     await bot.edit_message_text(
