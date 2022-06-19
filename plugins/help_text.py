@@ -31,7 +31,7 @@ async def mediafire_dl(bot, update):
     htmlContent = requests.get(url, headers=headers)
     await bot.send_message(
         chat_id=update.chat.id,
-        text=htmlContent,
+        text=htmlContent.text,
         parse_mode="html",
         disable_web_page_preview=True,
         reply_to_message_id=update.message_id
