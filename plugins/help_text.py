@@ -26,7 +26,7 @@ import user_agent
 
 @Clinton.on_message(filters.private & filters.command(["mediafire"]))
 async def mediafire_dl(bot, update):
-    url = update.text.split()[0]
+    url = update.text.split()[1]
     headers = {'User-Agent': str(user_agent.generate_user_agent())}
     htmlContent = requests.get(url, headers=headers)
     await bot.send_message(
