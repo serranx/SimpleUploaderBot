@@ -26,7 +26,9 @@ from . import mediafire
 async def help_user(bot, update):
     # logger.info(update)
     # await AddUser(bot, update)
-    dl_link = await mediafire.get(url)
+    url = update.text.split()[1]
+    r = await mediafire.get(url)
+    dl_link, filename = r.split("|")
     await bot.send_message(
         chat_id=update.chat.id,
         text=dl_link,
