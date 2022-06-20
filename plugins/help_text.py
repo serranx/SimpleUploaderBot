@@ -39,8 +39,8 @@ async def dl_mediafire(bot, update):
       send_type = "video"
     else:
       send_type = "file"
-    update.data = "{}={}={}".format(send_type, 0, dl_ext)
-    update.message.reply_to_message.text = dl_link
+    update.data = "{}={}={}={}".format(send_type, 0, dl_ext, dl_link)
+    # update.message.reply_to_message.text = dl_link
     await dl_button.ddl_call_back(bot, update)
     """
     await bot.send_message(
