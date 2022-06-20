@@ -26,8 +26,9 @@ from . import mediafire
 async def dl_mediafire(bot, update):
     # logger.info(update)
     # await AddUser(bot, update)
+    # test 👇
     url = update.text.split()[1]
-    r = await mediafire.get(url)
+    r = mediafire.get(url)
     dl_link, filename = r.split("|")
     print(d_link)
     await bot.send_message(
