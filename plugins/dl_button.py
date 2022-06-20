@@ -34,7 +34,10 @@ async def ddl_call_back(bot, update):
     tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("=")
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
         "/" + str(update.from_user.id) + ".jpg"
-    youtube_dl_url = update.message.reply_to_message.text
+    try:
+        youtube_dl_url = update.message.reply_to_message.text
+    except:
+        youtube_dl_url = cb_data.split("=")[3]
     custom_file_name = os.path.basename(youtube_dl_url)
     if "*" in youtube_dl_url:
         url_parts = youtube_dl_url.split("*")
