@@ -30,7 +30,7 @@ async def dl_mediafire(bot, update):
     url = update.text.split()[1]
     r = mediafire.get(url)
     dl_link, filename = r.split("|")
-    print(d_link)
+    print(dl_link)
     await bot.send_message(
         chat_id=update.chat.id,
         text=dl_link,
@@ -42,14 +42,14 @@ async def dl_mediafire(bot, update):
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
     #logger.info(update)
-    if hasattr(update.reply_to_message, "video"):
+    try:
         await bot.send_cached_media(
             chat_id=update.chat.id,
             file_id=update.reply_to_message.video.file_id,
             reply_to_message_id=update.message_id,
             caption=update.text
         )
-    else:
+    except:
         await bot.send_cached_media(
             chat_id=update.chat.id,
             file_id=update.reply_to_message.document.file_id,
