@@ -21,7 +21,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
-from . import youtube_dl_echo
+from . import dl_button
 
 @Clinton.on_message(filters.reply & filters.command(["mediafire"]))
 async def dl_mediafire(bot, update):
@@ -32,8 +32,16 @@ async def dl_mediafire(bot, update):
     r = mediafire.get(url)
     dl_link, filename = r.split("|")
     print(filename)
-    update.text = dl_link
-    await youtube_dl_echo.echo(bot, update)
+    print(dl_link)
+    video_formats = ["mp4", "mkv", "webm"]
+    dl_ext = filename.split(".")[-1]
+    if dl_ext in video_formats:
+      send_type = "video"
+    else:
+      send_type = "file"
+    update.data = "{}={}={}".format(send_type, 0, dl_ext)
+    update.message.reply_to_message.text = dl_link
+    await dl_button.ddl_call_back(bot, update)
     """
     await bot.send_message(
         chat_id=update.chat.id,
