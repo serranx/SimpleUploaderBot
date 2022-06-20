@@ -209,8 +209,8 @@ async def ddl_call_back(bot, update):
                 disable_web_page_preview=True
             )
             logger.info("✅ " + custom_file_name)
-            logger.info("✅ Downloaded in: " + time_taken_for_download)
-            logger.info("✅ Uploaded in: " + time_taken_for_upload)
+            logger.info("✅ Downloaded in: " + str(time_taken_for_download))
+            logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
     else:
         await bot.edit_message_text(
             text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
