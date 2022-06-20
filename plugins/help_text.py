@@ -29,6 +29,7 @@ async def help_user(bot, update):
     url = update.text.split()[1]
     r = await mediafire.get(url)
     dl_link, filename = r.split("|")
+    print(d_link)
     await bot.send_message(
         chat_id=update.chat.id,
         text=dl_link,
@@ -40,17 +41,17 @@ async def help_user(bot, update):
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
     #logger.info(update)
-    if update.reply_to_message.document.file_id is not None:
+    if update.reply_to_message.video.file_id is not None:
         await bot.send_cached_media(
             chat_id=update.chat.id,
-            file_id=update.reply_to_message.document.file_id,
+            file_id=update.reply_to_message.video.file_id,
             reply_to_message_id=update.message_id,
             caption=update.text
         )
     else:
         await bot.send_cached_media(
             chat_id=update.chat.id,
-            file_id=update.reply_to_message.video.file_id,
+            file_id=update.reply_to_message.document.file_id,
             reply_to_message_id=update.message_id,
             caption=update.text
         )
