@@ -23,7 +23,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
 
 @Clinton.on_message(filters.reply & filters.command(["mediafire"]))
-async def help_user(bot, update):
+async def dl_mediafire(bot, update):
     # logger.info(update)
     # await AddUser(bot, update)
     url = update.text.split()[1]
@@ -41,7 +41,7 @@ async def help_user(bot, update):
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
     #logger.info(update)
-    if update.reply_to_message.video.file_id is not None:
+    if hasattr(update.reply_to_message, "video"):
         await bot.send_cached_media(
             chat_id=update.chat.id,
             file_id=update.reply_to_message.video.file_id,
