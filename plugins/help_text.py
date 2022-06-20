@@ -22,7 +22,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
 
-@Clinton.on_message(filters.private & filters.command(["mediafire"]))
+@Clinton.on_message(filters.reply & filters.command(["mediafire"]))
 async def help_user(bot, update):
     # logger.info(update)
     # await AddUser(bot, update)
@@ -40,13 +40,21 @@ async def help_user(bot, update):
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
     #logger.info(update)
-    await bot.send_cached_media(
-        chat_id=update.chat.id,
-        file_id=update.reply_to_message.video.file_id,
-        reply_to_message_id=update.message_id,
-        caption=update.text
-    )
-
+    if update.reply_to_message.document.file_id is not None:
+        await bot.send_cached_media(
+            chat_id=update.chat.id,
+            file_id=update.reply_to_message.document.file_id,
+            reply_to_message_id=update.message_id,
+            caption=update.text
+        )
+    else:
+        await bot.send_cached_media(
+            chat_id=update.chat.id,
+            file_id=update.reply_to_message.video.file_id,
+            reply_to_message_id=update.message_id,
+            caption=update.text
+        )
+        
 @Clinton.on_message(filters.private & filters.command(["help"]))
 async def help_user(bot, update):
     # logger.info(update)
