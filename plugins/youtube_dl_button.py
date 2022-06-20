@@ -280,3 +280,6 @@ async def youtube_dl_call_back(bot, update):
                 message_id=update.message.message_id,
                 disable_web_page_preview=True
             )
+            logger.info("✅ " + custom_file_name)
+            logger.info("✅ Downloaded in: " + time_taken_for_download)
+            logger.info("✅ Uploaded in: " + time_taken_for_upload)
