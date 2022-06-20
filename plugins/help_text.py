@@ -33,7 +33,7 @@ async def dl_mediafire(bot, update):
     dl_link, filename = r.split("|")
     print(filename)
     update.text = dl_link
-    await echo(bot, update)
+    await youtube_dl_echo.echo(bot, update)
     """
     await bot.send_message(
         chat_id=update.chat.id,
