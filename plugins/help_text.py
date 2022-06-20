@@ -20,6 +20,20 @@ from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from . import mediafire
+
+@Clinton.on_message(filters.private & filters.command(["mediafire"]))
+async def help_user(bot, update):
+    # logger.info(update)
+    # await AddUser(bot, update)
+    dl_link = await mediafire.get(url)
+    await bot.send_message(
+        chat_id=update.chat.id,
+        text=dl_link,
+        parse_mode="html",
+        disable_web_page_preview=True,
+        reply_to_message_id=update.message_id
+    )
 
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
