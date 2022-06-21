@@ -45,7 +45,7 @@ async def dl_mediafire(bot, update):
       send_type = "file"
     update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
     await processing.delete(True)
-    mediafire.downloader(bot, update)
+    await mediafire.downloader(bot, update)
     """
     await bot.send_message(
         chat_id=update.chat.id,
