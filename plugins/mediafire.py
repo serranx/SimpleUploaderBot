@@ -81,7 +81,7 @@ async def download(bot, update):
         await bot.edit_message_text(
             text=Translation.UPLOAD_START,
             chat_id=update.chat.id,
-            message_id=update.message_id
+            message_id=dl_info.message_id
         )
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
