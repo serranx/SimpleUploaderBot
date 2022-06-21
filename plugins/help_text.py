@@ -40,15 +40,7 @@ async def dl_mediafire(bot, update):
     else:
       send_type = "file"
     update.data = "{}={}={}".format(send_type, 0, dl_ext)
-    update.message.reply_to_message.text = dl_link
-    update.message.reply_to_message.entities = [
-      {
-        "_": "MessageEntity",
-        "type": "text_link",
-        "url": dl_link
-      }
-    ]
-    await dl_button.ddl_call_back(bot, update)
+    await dl_button.ddl_call_back(bot, update, dl_link)
     """
     await bot.send_message(
         chat_id=update.chat.id,
