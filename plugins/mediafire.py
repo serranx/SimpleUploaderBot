@@ -32,12 +32,12 @@ def get(url):
     
     return "{}|{}".format(dl_url, filename)
     
-async def downloader(bot, update):
+async def download(bot, update):
     cb_data = update.data
     file_type, dl_link, ext, filename = cb_data.split("|")
     print(update)
     start = datetime.now()
-    await bot.send_message(
+    dl_info = await bot.send_message(
         chat_id=update.chat.id,
         text=Translation.DOWNLOAD_START.format(filename),
         parse_mode="html",
@@ -50,7 +50,7 @@ async def downloader(bot, update):
         chat_id=update.message.chat.id,
         message_id=update.message.message_id
     )
-    
+    """
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
@@ -77,6 +77,7 @@ async def downloader(bot, update):
             return False
     if os.path.exists(download_directory):
         end_one = datetime.now()
+        #bot.edit_message_text("Hi, " + str(message.from_user.first_name), var_data.chat.id, var_data.message_id)
         await bot.edit_message_text(
             text=Translation.UPLOAD_START,
             chat_id=update.chat.id,
@@ -103,31 +104,31 @@ async def downloader(bot, update):
                 duration = await Mdata03(download_directory)
                 thumb_image_path = await Gthumb01(bot, update)
                 await bot.send_audio(
-                    chat_id=update.message.chat.id,
+                    chat_id=update.chat.id,
                     audio=download_directory,
                     caption=description,
                     duration=duration,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    #reply_to_message_id=update.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update.message,
+                        update,
                         start_time
                     )
                 )
             elif send_type == "file":
                   thumb_image_path = await Gthumb01(bot, update)
                   await bot.send_document(
-                    chat_id=update.message.chat.id,
+                    chat_id=update.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    #reply_to_message_id=update.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update.message,
+                        update,
                         start_time
                     )
                 )
@@ -135,16 +136,16 @@ async def downloader(bot, update):
                  width, duration = await Mdata02(download_directory)
                  thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
                  await bot.send_video_note(
-                    chat_id=update.message.chat.id,
+                    chat_id=update.chat.id,
                     video_note=download_directory,
                     duration=duration,
                     length=width,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    #reply_to_message_id=update.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update.message,
+                        update,
                         start_time
                     )
                 )
@@ -152,7 +153,7 @@ async def downloader(bot, update):
                  width, height, duration = await Mdata01(download_directory)
                  thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
                  await bot.send_video(
-                    chat_id=update.message.chat.id,
+                    chat_id=update.chat.id,
                     video=download_directory,
                     caption=description,
                     duration=duration,
@@ -160,11 +161,11 @@ async def downloader(bot, update):
                     height=height,
                     supports_streaming=True,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    #reply_to_message_id=update.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update.message,
+                        update,
                         start_time
                     )
                 )
@@ -253,4 +254,4 @@ ETA: {}.format(
         disable_web_page_preview=True,
         reply_to_message_id=update.message_id
     )
-    """
+    
