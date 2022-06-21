@@ -28,19 +28,40 @@ async def dl_mediafire(bot, update):
     # logger.info(update)
     # await AddUser(bot, update)
     # test 👇
+    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     url = update.text.split()[1]
     r = mediafire.get(url)
     dl_link, filename = r.split("|")
     print(filename)
     print(dl_link)
+    print(update)
     video_formats = ["mp4", "mkv", "webm"]
+    audio_formats = ["mp3", "m4a"]
     dl_ext = filename.split(".")[-1]
     if dl_ext in video_formats:
       send_type = "video"
+    elif dl_ext in audio_formats:
+      send_type = "audio"
     else:
       send_type = "file"
-    update.data = "{}={}={}".format(send_type, 0, dl_ext)
-    await dl_button.ddl_call_back(bot, update, dl_link)
+    update.data = "{}|{}|{}".format(send_type, dl_link, dl_ext)
+    #mediafire.download(bot, update)
+    processing.delete(True)
+    if send_type == "video":
+      await bot.send_video(
+        chat_id=update.chat.id,
+        video=dl_link,
+        caption=filename,
+        parse_mode="HTML",
+        supports_streaming=True
+      )
+    else:
+      await bot.send_document(
+        chat_id=update.chat.id,
+        document=dl_link,
+        caption=filename,
+        parse_mode="HTML",
+      )
     """
     await bot.send_message(
         chat_id=update.chat.id,
