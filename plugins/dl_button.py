@@ -27,12 +27,12 @@ from hachoir.parser import createParser
 # https://stackoverflow.com/a/37631799/4723940
 from PIL import Image
 
-async def ddl_call_back(bot, update, murl = None):
+async def ddl_call_back(bot, update, dl_link = None):
     logger.info(update)
     cb_data = update.data
     # youtube_dl extractors
     tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("=")
-    if murl is not None:
+    if dl_link is not None:
         youtube_dl_url = murl
         update.message.reply_to_message.entities = [
             {
