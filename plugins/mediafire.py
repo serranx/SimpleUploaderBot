@@ -1,6 +1,19 @@
 
 import requests
+import asyncio
+import aiohttp
+import os
+import time
+from datetime import datetime
 from bs4 import BeautifulSoup
+# the secret configuration specific things
+from config import Config
+# the Strings used for this "thing"
+from translation import Translation
+from plugins.custom_thumbnail import *
+from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 
 def get(url):
     headers = {
@@ -19,100 +32,225 @@ def get(url):
     
     return "{}|{}".format(dl_url, filename)
     
-"""
-import argparse
-import os
-import os.path as osp
-import re
-import shutil
-import sys
-import tempfile
-import requests
-import six
-import tqdm
-
-CHUNK_SIZE = 512 * 1024  # 512KB
-
-def extractDownloadLink(contents):
-    for line in contents.splitlines():
-        m = re.search(r'href="((http|https)://download[^"]+)', line)
-        if m:
-            return m.groups()[0]
-
-def download(url, output, quiet):
-    url_origin = url
-    sess = requests.session()
-
-    while True:
-        res = sess.get(url, stream=True)
-        if 'Content-Disposition' in res.headers:
-            # This is the file
-            break
-
-        # Need to redirect with confiramtion
-        url = extractDownloadLink(res.text)
-
-        if url is None:
-            print('Permission denied: %s' % url_origin, file=sys.stderr)
-            print(
-                "Maybe you need to change permission over "
-                "'Anyone with the link'?",
-                file=sys.stderr,
-            )
-            return
-
-    if output is None:
-        m = re.search(
-            'filename="(.*)"', res.headers['Content-Disposition']
-        )
-        output = m.groups()[0]
-        # output = osp.basename(url)
-
-    output_is_path = isinstance(output, six.string_types)
-
-    if not quiet:
-        print('Downloading...', file=sys.stderr)
-        print('From:', url_origin, file=sys.stderr)
-        print(
-            'To:',
-            osp.abspath(output) if output_is_path else output,
-            file=sys.stderr,
-        )
-
-    if output_is_path:
-        tmp_file = tempfile.mktemp(
-            suffix=tempfile.template,
-            prefix=osp.basename(output),
-            dir=osp.dirname(output),
-        )
-        f = open(tmp_file, 'wb')
-    else:
-        tmp_file = None
-        f = output
-
-    try:
-        total = res.headers.get('Content-Length')
-        if total is not None:
-            total = int(total)
-        if not quiet:
-            pbar = tqdm.tqdm(total=total, unit='B', unit_scale=True)
-        for chunk in res.iter_content(chunk_size=CHUNK_SIZE):
-            f.write(chunk)
-            if not quiet:
-                pbar.update(len(chunk))
-        if not quiet:
-            pbar.close()
-        if tmp_file:
-            f.close()
-            shutil.move(tmp_file, output)
-    except IOError as e:
-        print(e, file=sys.stderr)
-        return
-    finally:
+async def download(bot, update):
+    cb_data = update.data
+    file_type, dl_link, ext, filename = cb_data.split("|")
+    print(update)
+    start = datetime.now()
+    await bot.send_message(
+        chat_id=update.chat.id,
+        text=Translation.DOWNLOAD_START.format(filename),
+        parse_mode="html",
+        disable_web_page_preview=True,
+        reply_to_message_id=update.message_id
+    )
+    """
+    await bot.edit_message_text(
+        text=Translation.DOWNLOAD_START.format(custom_file_name),
+        chat_id=update.message.chat.id,
+        message_id=update.message.message_id
+    )
+    
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
+    if not os.path.isdir(tmp_directory_for_each_user):
+        os.makedirs(tmp_directory_for_each_user)
+    download_directory = tmp_directory_for_each_user + "/" + custom_file_name
+    command_to_exec = []
+    async with aiohttp.ClientSession() as session:
+        c_time = time.time()
         try:
-            if tmp_file:
-                os.remove(tmp_file)
-        except OSError:
-            pass
-    return output
-"""
+            await download_coroutine(
+                bot,
+                session,
+                dl_link,
+                download_directory,
+                update.chat.id,
+                update.message_id,
+                c_time
+            )
+        except asyncio.TimeoutError:
+            await bot.edit_message_text(
+                text=Translation.SLOW_URL_DECED,
+                chat_id=update.chat.id,
+                message_id=update.message_id
+            )
+            return False
+    if os.path.exists(download_directory):
+        end_one = datetime.now()
+        await bot.edit_message_text(
+            text=Translation.UPLOAD_START,
+            chat_id=update.chat.id,
+            message_id=update.message_id
+        )
+        file_size = Config.TG_MAX_FILE_SIZE + 1
+        try:
+            file_size = os.stat(download_directory).st_size
+        except FileNotFoundError as exc:
+            download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
+            # https://stackoverflow.com/a/678242/4723940
+            file_size = os.stat(download_directory).st_size
+        if file_size > Config.TG_MAX_FILE_SIZE:
+            await bot.edit_message_text(
+                chat_id=update.chat.id,
+                text=Translation.RCHD_TG_API_LIMIT,
+                message_id=update.message_id
+            )
+        else:
+            # ref: message from @SOURCES_CODES
+            start_time = time.time()
+            # try to upload file
+            if send_type == "audio":
+                duration = await Mdata03(download_directory)
+                thumb_image_path = await Gthumb01(bot, update)
+                await bot.send_audio(
+                    chat_id=update.message.chat.id,
+                    audio=download_directory,
+                    caption=description,
+                    duration=duration,
+                    thumb=thumb_image_path,
+                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update.message,
+                        start_time
+                    )
+                )
+            elif send_type == "file":
+                  thumb_image_path = await Gthumb01(bot, update)
+                  await bot.send_document(
+                    chat_id=update.message.chat.id,
+                    document=download_directory,
+                    thumb=thumb_image_path,
+                    caption=description,
+                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update.message,
+                        start_time
+                    )
+                )
+            elif send_type == "vm":
+                 width, duration = await Mdata02(download_directory)
+                 thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                 await bot.send_video_note(
+                    chat_id=update.message.chat.id,
+                    video_note=download_directory,
+                    duration=duration,
+                    length=width,
+                    thumb=thumb_image_path,
+                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update.message,
+                        start_time
+                    )
+                )
+            elif send_type == "video":
+                 width, height, duration = await Mdata01(download_directory)
+                 thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                 await bot.send_video(
+                    chat_id=update.message.chat.id,
+                    video=download_directory,
+                    caption=description,
+                    duration=duration,
+                    width=width,
+                    height=height,
+                    supports_streaming=True,
+                    thumb=thumb_image_path,
+                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update.message,
+                        start_time
+                    )
+                )
+            end_two = datetime.now()
+            try:
+                os.remove(download_directory)
+                os.remove(thumb_image_path)
+            except:
+                pass
+            time_taken_for_download = (end_one - start).seconds
+            time_taken_for_upload = (end_two - end_one).seconds
+            await bot.edit_message_text(
+                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
+                chat_id=update.chat.id,
+                message_id=update.message_id,
+                disable_web_page_preview=True
+            )
+            logger.info("✅ " + custom_file_name)
+            logger.info("✅ Downloaded in: " + str(time_taken_for_download))
+            logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
+    else:
+        await bot.edit_message_text(
+            text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
+            chat_id=update.chat.id,
+            message_id=update.message_id,
+            disable_web_page_preview=True
+        )
+
+async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
+    downloaded = 0
+    display_message = ""
+    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+        total_length = int(response.headers["Content-Length"])
+        content_type = response.headers["Content-Type"]
+        if "text" in content_type and total_length < 500:
+            return await response.release()
+        await bot.edit_message_text(
+            chat_id,
+            message_id,
+            text="""Initiating Download
+URL: {}
+File Size: {}""".format(url, humanbytes(total_length))
+        )
+        with open(file_name, "wb") as f_handle:
+            while True:
+                chunk = await response.content.read(Config.CHUNK_SIZE)
+                if not chunk:
+                    break
+                f_handle.write(chunk)
+                downloaded += Config.CHUNK_SIZE
+                now = time.time()
+                diff = now - start
+                if round(diff % 5.00) == 0 or downloaded == total_length:
+                    percentage = downloaded * 100 / total_length
+                    speed = downloaded / diff
+                    elapsed_time = round(diff) * 1000
+                    time_to_completion = round(
+                        (total_length - downloaded) / speed) * 1000
+                    estimated_total_time = elapsed_time + time_to_completion
+                    try:
+                        current_message = """**Download Status**
+URL: {}
+File Size: {}
+Downloaded: {}
+ETA: {}""".format(
+    url,
+    humanbytes(total_length),
+    humanbytes(downloaded),
+    TimeFormatter(estimated_total_time)
+)
+                        if current_message != display_message:
+                            await bot.edit_message_text(
+                                chat_id,
+                                message_id,
+                                text=current_message
+                            )
+                            display_message = current_message
+                    except Exception as e:
+                        logger.info(str(e))
+                        pass
+        return await response.release()
+    await bot.send_message(
+        chat_id=update.chat.id,
+        text=dl_link,
+        parse_mode="html",
+        disable_web_page_preview=True,
+        reply_to_message_id=update.message_id
+    )
+    """
