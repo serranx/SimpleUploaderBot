@@ -77,6 +77,7 @@ async def download(bot, update):
             return False
     if os.path.exists(download_directory):
         end_one = datetime.now()
+        time_taken_for_download = (end_one - start).seconds
         #bot.edit_message_text("Hi, " + str(message.from_user.first_name), var_data.chat.id, var_data.message_id)
         await bot.edit_message_text(
             text=Translation.UPLOAD_START,
@@ -93,7 +94,7 @@ async def download(bot, update):
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT,
+                text=Translation.RCHD_TG_API_LIMIT.format(time_taken_for_download, humanbytes(file_size)),
                 message_id=dl_info.message_id
             )
         else:
@@ -175,7 +176,6 @@ async def download(bot, update):
                 os.remove(thumb_image_path)
             except:
                 pass
-            time_taken_for_download = (end_one - start).seconds
             time_taken_for_upload = (end_two - end_one).seconds
             await bot.edit_message_text(
                 text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
