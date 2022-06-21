@@ -54,7 +54,7 @@ async def download(bot, update):
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
-    download_directory = tmp_directory_for_each_user + "/" + custom_file_name
+    download_directory = tmp_directory_for_each_user + "/" + filename
     command_to_exec = []
     async with aiohttp.ClientSession() as session:
         c_time = time.time()
@@ -183,7 +183,7 @@ async def download(bot, update):
                 message_id=update.message_id,
                 disable_web_page_preview=True
             )
-            logger.info("✅ " + custom_file_name)
+            logger.info("✅ " + filename)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
             logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
     else:
