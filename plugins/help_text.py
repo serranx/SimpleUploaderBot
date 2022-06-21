@@ -34,7 +34,6 @@ async def dl_mediafire(bot, update):
     dl_link, filename = r.split("|")
     print(filename)
     print(dl_link)
-    print(update)
     video_formats = ["mp4", "mkv", "webm"]
     audio_formats = ["mp3", "m4a"]
     dl_ext = filename.split(".")[-1]
@@ -45,8 +44,8 @@ async def dl_mediafire(bot, update):
     else:
       send_type = "file"
     update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
+    await processing.delete(True)
     mediafire.download(bot, update)
-    processing.delete(True)
     """
     await bot.send_message(
         chat_id=update.chat.id,
