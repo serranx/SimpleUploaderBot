@@ -34,7 +34,6 @@ async def ddl_call_back(bot, update, dl_link = None):
     tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("=")
     if dl_link is not None:
         youtube_dl_url = dl_link
-        update.message = update
     else:
         youtube_dl_url = update.message.reply_to_message.text
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
