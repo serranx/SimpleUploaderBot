@@ -34,7 +34,7 @@ def get(url):
     
 async def download(bot, update):
     cb_data = update.data
-    file_type, dl_link, ext, filename = cb_data.split("|")
+    send_type, dl_link, ext, filename = cb_data.split("|")
     print(update)
     start = datetime.now()
     dl_info = await bot.send_message(
@@ -94,7 +94,7 @@ async def download(bot, update):
             await bot.edit_message_text(
                 chat_id=update.chat.id,
                 text=Translation.RCHD_TG_API_LIMIT,
-                message_id=update.message_id
+                message_id=dl_info.message_id
             )
         else:
             # ref: message from @SOURCES_CODES
@@ -113,7 +113,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update,
+                        dl_info,
                         start_time
                     )
                 )
@@ -128,7 +128,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update,
+                        dl_info,
                         start_time
                     )
                 )
@@ -145,7 +145,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update,
+                        dl_info,
                         start_time
                     )
                 )
@@ -165,7 +165,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update,
+                        dl_info,
                         start_time
                     )
                 )
@@ -180,7 +180,7 @@ async def download(bot, update):
             await bot.edit_message_text(
                 text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
                 chat_id=update.chat.id,
-                message_id=update.message_id,
+                message_id=dl_info.message_id,
                 disable_web_page_preview=True
             )
             logger.info("✅ " + filename)
@@ -190,7 +190,7 @@ async def download(bot, update):
         await bot.edit_message_text(
             text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
             chat_id=update.chat.id,
-            message_id=update.message_id,
+            message_id=dl_info.message_id,
             disable_web_page_preview=True
         )
 
