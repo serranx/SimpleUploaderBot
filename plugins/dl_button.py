@@ -33,7 +33,7 @@ async def ddl_call_back(bot, update, dl_link = None):
     # youtube_dl extractors
     tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("=")
     if dl_link is not None:
-        youtube_dl_url = murl
+        youtube_dl_url = dl_link
         update.message.reply_to_message.entities = [
             {
                 "_": "MessageEntity",
