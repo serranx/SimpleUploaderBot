@@ -44,24 +44,9 @@ async def dl_mediafire(bot, update):
       send_type = "audio"
     else:
       send_type = "file"
-    update.data = "{}|{}|{}".format(send_type, dl_link, dl_ext)
-    #mediafire.download(bot, update)
+    update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
+    mediafire.download(bot, update)
     processing.delete(True)
-    if send_type == "video":
-      await bot.send_video(
-        chat_id=update.chat.id,
-        video=dl_link,
-        caption=filename,
-        parse_mode="HTML",
-        supports_streaming=True
-      )
-    else:
-      await bot.send_document(
-        chat_id=update.chat.id,
-        document=dl_link,
-        caption=filename,
-        parse_mode="HTML",
-      )
     """
     await bot.send_message(
         chat_id=update.chat.id,
