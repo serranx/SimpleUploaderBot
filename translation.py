@@ -3,6 +3,17 @@ class Translation(object):
 💫 I'm Simple Uploader Bot! ✨
 You can upload HTTP/HTTPS direct link, Using this bot!
 
+<u>I can upload various kind of direct link formats such as:</u>
+
+    1. MP4
+    2. some M3U8 links
+    3. YouTube links
+    4. Seedr links
+    5. Mediafire links
+    and many other direct links!... 🥳
+    
+<i><b>Note:</b> Support for Google Drive, MEGA and other links will be added soon.</i>
+
 /help for more details!"""
     ADD_CAPTION_HELP = """Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> and the text you wrote will be attached as the caption! 🤩
     
