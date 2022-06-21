@@ -32,7 +32,7 @@ def get(url):
     
     return "{}|{}".format(dl_url, filename)
     
-async def download(bot, update):
+async def downloader(bot, update):
     cb_data = update.data
     file_type, dl_link, ext, filename = cb_data.split("|")
     print(update)
