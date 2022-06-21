@@ -23,13 +23,13 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
 from . import dl_button
 
-@Clinton.on_message(filters.command(["mediafire"]))
+@Clinton.on_message(filters.regex(pattern="[w]*\.mediafire\.com"))
 async def dl_mediafire(bot, update):
     # logger.info(update)
     # await AddUser(bot, update)
     # test 👇
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
-    url = update.text.split()[1]
+    url = update.text
     r = mediafire.get(url)
     dl_link, filename = r.split("|")
     print(filename)
