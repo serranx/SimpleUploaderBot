@@ -23,7 +23,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
 from . import dl_button
 
-@Clinton.on_message(filters.reply & filters.command(["mediafire"]))
+@Clinton.on_message(filters.command(["mediafire"]))
 async def dl_mediafire(bot, update):
     # logger.info(update)
     # await AddUser(bot, update)
