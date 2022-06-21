@@ -202,13 +202,7 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
         content_type = response.headers["Content-Type"]
         if "text" in content_type and total_length < 500:
             return await response.release()
-        await bot.edit_message_text(
-            chat_id,
-            message_id,
-            text="""Initiating Download
-URL: {}
-File Size: {}""".format(url, humanbytes(total_length))
-        )
+        
         with open(file_name, "wb") as f_handle:
             while True:
                 chunk = await response.content.read(Config.CHUNK_SIZE)
@@ -221,37 +215,9 @@ File Size: {}""".format(url, humanbytes(total_length))
                 if round(diff % 5.00) == 0 or downloaded == total_length:
                     percentage = downloaded * 100 / total_length
                     speed = downloaded / diff
-                    elapsed_time = round(diff) * 1000
+                     = round(diff) * 1000
                     time_to_completion = round(
                         (total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
-                    try:
-                        current_message = """**Download Status**
-URL: {}
-File Size: {}
-Downloaded: {}
-ETA: {}""".format(
-    url,
-    humanbytes(total_length),
-    humanbytes(downloaded),
-    TimeFormatter(estimated_total_time)
-)
-                        if current_message != display_message:
-                            await bot.edit_message_text(
-                                chat_id,
-                                message_id,
-                                text=current_message
-                            )
-                            display_message = current_message
-                    except Exception as e:
-                        logger.info(str(e))
-                        pass
         return await response.release()
-    await bot.send_message(
-        chat_id=update.chat.id,
-        text=dl_link,
-        parse_mode="html",
-        disable_web_page_preview=True,
-        reply_to_message_id=update.message_id
-    )
     
