@@ -106,7 +106,7 @@ async def download(bot, update):
                 await bot.send_audio(
                     chat_id=update.chat.id,
                     audio=download_directory,
-                    caption=description,
+                    caption=filename,
                     duration=duration,
                     thumb=thumb_image_path,
                     #reply_to_message_id=update.message.reply_to_message.message_id,
@@ -123,7 +123,7 @@ async def download(bot, update):
                     chat_id=update.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
-                    caption=description,
+                    caption=filename,
                     #reply_to_message_id=update.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -155,7 +155,7 @@ async def download(bot, update):
                  await bot.send_video(
                     chat_id=update.chat.id,
                     video=download_directory,
-                    caption=description,
+                    caption=filename,
                     duration=duration,
                     width=width,
                     height=height,
