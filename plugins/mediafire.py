@@ -15,7 +15,7 @@ from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, Tim
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 
-def get(url):
+async def get(url):
     headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
@@ -44,13 +44,6 @@ async def download(bot, update):
         disable_web_page_preview=True,
         reply_to_message_id=update.message_id
     )
-    """
-    await bot.edit_message_text(
-        text=Translation.DOWNLOAD_START.format(custom_file_name),
-        chat_id=update.message.chat.id,
-        message_id=update.message.message_id
-    )
-    """
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
@@ -78,7 +71,6 @@ async def download(bot, update):
     if os.path.exists(download_directory):
         end_one = datetime.now()
         time_taken_for_download = (end_one - start).seconds
-        #bot.edit_message_text("Hi, " + str(message.from_user.first_name), var_data.chat.id, var_data.message_id)
         await bot.edit_message_text(
             text=Translation.UPLOAD_START,
             chat_id=update.chat.id,
@@ -110,7 +102,7 @@ async def download(bot, update):
                     caption=filename,
                     duration=duration,
                     thumb=thumb_image_path,
-                    #reply_to_message_id=update.message.reply_to_message.message_id,
+                    #reply_to_message_id=dl_info.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
@@ -183,6 +175,7 @@ async def download(bot, update):
                 message_id=dl_info.message_id,
                 disable_web_page_preview=True
             )
+            print(dl_info)
             logger.info("✅ " + filename)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
             logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
