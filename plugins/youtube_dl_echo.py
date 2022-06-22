@@ -99,13 +99,13 @@ async def echo(bot, update):
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
+    # Wait for the subprocess to finish
+    stdout, stderr = await process.communicate()
     await bot.edit_message_text(
         text="<b>Processing... ⌛</b>",
         chat_id=update.chat.id,
         message_id=imog.message_id
     )
-    # Wait for the subprocess to finish
-    stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
     # logger.info(e_response)
     t_response = stdout.decode().strip()
