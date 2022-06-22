@@ -40,7 +40,13 @@ If you want a custom caption on your video/file send the name/text you want to s
 <b>Link * caption</b> (without extension). 
 [Separate the link and the caption name with "*" mark].
 
-<b>Example:</b> <code>https://www.website.com/video.mp4 * caption text</code>
+<i>It is important that you separate with spaces the URL, * and the caption.</i>
+
+<b>👍 Send something like this:</b>
+<code>https://www.website.com/video.mp4 * caption text</code>
+
+<b>🤡 Not like this:</b>
+<code>❌ https://www.website.com/video.mp4*caption text ❌</code>
 
 👉 The caption/text you type will be automatically set as the custom name of the uploaded file 😎
 
