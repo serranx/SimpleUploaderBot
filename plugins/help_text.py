@@ -23,20 +23,31 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
 from . import dl_button
 
-@Clinton.on_message(filters.regex(pattern="[w]*\.mediafire\.com"))
+@Clinton.on_message(filters.regex(pattern="\.mediafire\.com"))
 async def dl_mediafire(bot, update):
-    # logger.info(update)
-    # await AddUser(bot, update)
     # test 👇
-    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
-    url = update.text
-    r = mediafire.get(url)
-    dl_link, filename = r.split("|")
-    print(filename)
-    print(dl_link)
     video_formats = ["mp4", "mkv", "webm"]
     audio_formats = ["mp3", "m4a"]
-    dl_ext = filename.split(".")[-1]
+    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
+    if " * " in update.text:
+      try:
+        url, custom_filename = update.text.split(" * ")
+      except:
+        await bot.edit_message_text(
+          text="Please make sure you submit your request correctly.\n\n/help for more details!",
+          chat_id=update.chat.id,
+          message_id=processing.message_id
+        )
+      r = await mediafire.get(url)
+      dl_link, filename = r.split("|")
+      dl_ext = filename.split(".")[-1]
+      filename = custom_filename + "." + dl_ext
+    else:
+      url = update.text
+      r = await mediafire.get(url)
+      dl_link, filename = r.split("|")
+      dl_ext = filename.split(".")[-1]
+    #if re.search("download[0-9]*\.mediafire\.com", update.text)
     if dl_ext in video_formats:
       send_type = "video"
     elif dl_ext in audio_formats:
@@ -46,15 +57,6 @@ async def dl_mediafire(bot, update):
     update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
     await processing.delete(True)
     await mediafire.download(bot, update)
-    """
-    await bot.send_message(
-        chat_id=update.chat.id,
-        text=dl_link,
-        parse_mode="html",
-        disable_web_page_preview=True,
-        reply_to_message_id=update.message_id
-    )
-    """
 
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
