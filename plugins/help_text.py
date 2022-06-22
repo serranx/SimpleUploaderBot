@@ -64,6 +64,27 @@ async def dl_mediafire(bot, update):
     await processing.delete(True)
     await mediafire.download(bot, update)
 
+@Clinton.on_message(filters.private & filters.command(["cancel"]))
+async def cancel_process(bot,update):
+    path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"
+    if os.path.exists(path):
+        os.remove(path)
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text=Translation.PROCESS_CANCELLED,
+            parse_mode="html",
+            disable_web_page_preview=True,
+            reply_to_message_id=update.message_id
+        )
+    else:
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text=Translation.NO_PROCESS_FOUND,
+            parse_mode="html",
+            disable_web_page_preview=True,
+            reply_to_message_id=update.message_id
+        )
+
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
     #logger.info(update)
