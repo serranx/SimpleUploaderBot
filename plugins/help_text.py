@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 import os
+import re
 
 from config import Config
 # the Strings used for this "thing"
