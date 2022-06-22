@@ -34,7 +34,7 @@ async def dl_mediafire(bot, update):
         url, custom_filename = update.text.split(" * ")
       except:
         await bot.edit_message_text(
-          text="Please make sure you submit your request correctly.\n\n/help for more details!",
+          text=Translation.INCORRECT_REQUEST,
           chat_id=update.chat.id,
           message_id=processing.message_id
         )
