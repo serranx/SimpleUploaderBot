@@ -32,8 +32,8 @@ async def echo(bot, update):
     youtube_dl_password = None
     file_name = None
     url = update.text
-    if "*" in url:
-        url_parts = url.split("*")
+    if " * " in url:
+        url_parts = url.split(" * ")
         if len(url_parts) == 2:
             url = url_parts[0]
             file_name = url_parts[1]
