@@ -59,8 +59,6 @@ async def echo(bot, update):
             youtube_dl_username = youtube_dl_username.strip()
         if youtube_dl_password is not None:
             youtube_dl_password = youtube_dl_password.strip()
-        logger.info(url)
-        logger.info(file_name)
     else:
         for entity in update.entities:
             if entity.type == "text_link":
@@ -161,7 +159,7 @@ async def echo(bot, update):
                         echo_vid = "🎥 video " + format_ext + " " + approx_file_size
                     ikeyboard = [
                         InlineKeyboardButton(
-                             echo_vid,
+                            echo_vid,
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
