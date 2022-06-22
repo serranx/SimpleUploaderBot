@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-import requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, json, math
+import sys, requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, json, math
 
 from config import Config
 from database.adduser import AddUser
@@ -28,6 +28,13 @@ from pyrogram.errors import UserNotParticipant
 async def echo(bot, update):
     await AddUser(bot, update)
     imog = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
+    if os.path.exists(Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"):
+        await bot.edit_message_text(
+            text=Translation.WAIT_PROCESS_FINISH,
+            chat_id=update.chat.id,
+            message_id=imog.message_id
+        )
+        sys.exit()
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
