@@ -36,8 +36,8 @@ async def ddl_call_back(bot, update):
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
         "/" + str(update.from_user.id) + ".jpg"
     custom_file_name = os.path.basename(youtube_dl_url)
-    if "*" in youtube_dl_url:
-        url_parts = youtube_dl_url.split("*")
+    if " * " in youtube_dl_url:
+        url_parts = youtube_dl_url.split(" * ")
         if len(url_parts) == 2:
             youtube_dl_url = url_parts[0]
             custom_file_name = url_parts[1]
