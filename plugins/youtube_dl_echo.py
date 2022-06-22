@@ -155,13 +155,17 @@ async def echo(bot, update):
                 cb_string_file = "{}|{}|{}".format(
                     "file", format_id, format_ext)
                 if format_string is not None and not "audio only" in format_string:
+                    if len(format_string.split("-")) > 1:
+                        echo_vid = "🎥 video " + format_string.split("-")[0] + " " + approx_file_size
+                    else:
+                        echo_vid = "🎥 video " + format_ext + " " + approx_file_size
                     ikeyboard = [
                         InlineKeyboardButton(
-                             "🎥 video " + format_string.split("-")[0] + " " + approx_file_size + " ",
+                             echo_vid,
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
-                            "📄 file " + format_ext + " " + approx_file_size + " ",
+                            "📄 file " + format_ext + " " + approx_file_size,
                             callback_data=(cb_string_file).encode("UTF-8")
                         )
                     ]
