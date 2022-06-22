@@ -39,6 +39,9 @@ async def dl_mediafire(bot, update):
           chat_id=update.chat.id,
           message_id=processing.message_id
         )
+      if re.search("download[0-9]*\.mediafire\.com", url):
+        url_parts = url.split("/")
+        url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
       r = await mediafire.get(url)
       dl_link, filename = r.split("|")
       dl_ext = filename.split(".")[-1]
