@@ -44,10 +44,12 @@ async def dl_mediafire(bot, update):
       filename = custom_filename + "." + dl_ext
     else:
       url = update.text
+      if re.search("download[0-9]*\.mediafire\.com", url):
+        url_parts = url.split("/")
+        url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
       r = await mediafire.get(url)
       dl_link, filename = r.split("|")
       dl_ext = filename.split(".")[-1]
-    #if re.search("download[0-9]*\.mediafire\.com", update.text)
     if dl_ext in video_formats:
       send_type = "video"
     elif dl_ext in audio_formats:
