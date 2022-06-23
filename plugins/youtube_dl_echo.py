@@ -132,7 +132,7 @@ async def echo(bot, update):
         )
         return False
     if t_response:
-        logger.info(t_response)
+        #logger.info(t_response)
         x_reponse = t_response
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
