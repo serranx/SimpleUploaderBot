@@ -35,8 +35,8 @@ async def dl_fembed(bot, update):
         parse_mode="html",
         reply_to_message_id=update.message_id
     )
-    print(processing)
-    
+    print(update)
+    """
     bypasser = lk21.Bypass()
     url = update.text
     if " * " in url:
@@ -54,7 +54,7 @@ async def dl_fembed(bot, update):
         }
         formats["formats"].append(aux)
     await fembed.download(bot, processing, formats)
-    
+    """
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
     # test 👇
