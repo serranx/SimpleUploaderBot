@@ -21,7 +21,7 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
     INCORRECT_REQUEST = """Please make sure you submit your request correctly.
     
 /help for more details."""
-    WAIT_PROCESS_FINISH = """Please wait for your current file to finish downloading before sending more links! 🌟
+    WAIT_PROCESS_FINISH = """🌟 Please wait for your current file to finish downloading before sending more links!
     
 Or use /cancel to terminate incomplete processes."""
     PROCESS_CANCELLED = """File upload cancelled! 💥
