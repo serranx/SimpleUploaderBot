@@ -22,9 +22,33 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
-from . import dl_button
+from . import fembed
+#from . import dl_button
+import lk21
 
-@Clinton.on_message(filters.regex(pattern="\.mediafire\.com"))
+@Clinton.on_message(filters.regex(pattern="fembed\.com/"))
+async def dl_fembed(bot, update):
+    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
+    bypasser = lk21.Bypass()
+    url = None
+    if " * " in update.text
+        url = update.text.split[0]
+    json = bypasser.bypass_url(url)
+    formats = {
+        "formats": []
+    }
+    for format in json:
+        aux = {
+            "ext": format["key"].split("/")[1],
+            "format_id": format["key"].split("/")[0],
+            "format": format["key"].split("/")[0],
+            "url": format["value"]
+        }
+        aux2 = formats["formats"]
+        aux2.append(aux)
+    fembed.download(bot, processing, formats)
+
+@Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
     # test 👇
     video_formats = ["mp4", "mkv", "webm"]
