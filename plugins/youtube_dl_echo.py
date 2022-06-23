@@ -111,7 +111,7 @@ async def echo(bot, update):
         chat_id=update.chat.id,
         message_id=imog.message_id
     )
-    time.sleep(2)
+    time.sleep(1)
     e_response = stderr.decode().strip()
     # logger.info(e_response)
     t_response = stdout.decode().strip()
@@ -132,7 +132,7 @@ async def echo(bot, update):
         )
         return False
     if t_response:
-        # logger.info(t_response)
+        logger.info(t_response)
         x_reponse = t_response
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
