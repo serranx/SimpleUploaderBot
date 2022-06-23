@@ -37,19 +37,20 @@ async def download(bot, update, formats):
     """
     file_name = None
     url = update.text
-    if " * " in update.message.reply_to_message.text:
+    if " * " in url:
         url_parts = url.split(" * ")
         if len(url_parts) == 2:
-            url = url_parts[0]
             file_name = url_parts[1]
         if file_name is not None:
             file_name = file_name.strip()
+    """
     await bot.edit_message_text(
         text="<b>Processing... ⌛</b>",
         chat_id=update.chat.id,
         message_id=update.message.message_id
     )
     time.sleep(1)
+    """
     if formats:
         x_reponse = formats
         if "\n" in x_reponse:
@@ -162,13 +163,12 @@ async def download(bot, update, formats):
                 )
             ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await update.delete(True)
         await bot.send_message(
-            chat_id=update.message.chat.id,
+            chat_id=update.chat.id,
             text=Translation.FORMAT_SELECTION,
             reply_markup=reply_markup,
             parse_mode="html",
-            reply_to_message_id=update.message.reply_to_message.message_id
+            reply_to_message_id=update.message_id
         )
     else:
         # fallback for nonnumeric port a.k.a seedbox.io
@@ -188,14 +188,10 @@ async def download(bot, update, formats):
             )
         ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        try:
-            await imog.delete(True)
-        except:
-            pass
         await bot.send_message(
-            chat_id=update.message.chat.id,
+            chat_id=update.chat.id,
             text=Translation.FORMAT_SELECTION,
             reply_markup=reply_markup,
             parse_mode="html",
-            reply_to_message_id=update.message.reply_to_message.message_id
+            reply_to_message_id=update.message_id
         )
