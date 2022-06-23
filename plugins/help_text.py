@@ -45,7 +45,7 @@ async def dl_fembed(bot, update):
             "url": format["value"]
         }
         formats["formats"].append(aux)
-    fembed.download(bot, processing, formats)
+    await fembed.download(bot, processing, formats)
 
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
