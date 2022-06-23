@@ -66,9 +66,9 @@ async def dl_mediafire(bot, update):
 
 @Clinton.on_message(filters.private & filters.command(["cancel"]))
 async def cancel_process(bot,update):
-    path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"
-    if os.path.exists(path):
-        os.remove(path)
+    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"
+    if os.path.exists(save_ytdl_json_path):
+        os.remove(save_ytdl_json_path)
         await bot.send_message(
             chat_id=update.chat.id,
             text=Translation.PROCESS_CANCELLED,
@@ -87,7 +87,6 @@ async def cancel_process(bot,update):
 
 @Clinton.on_message(filters.reply & filters.text)
 async def edit_caption(bot, update):
-    #logger.info(update)
     try:
         await bot.send_cached_media(
             chat_id=update.chat.id,
