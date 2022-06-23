@@ -28,19 +28,13 @@ import lk21
 
 @Clinton.on_message(filters.regex(pattern="fembed\.com/"))
 async def dl_fembed(bot, update):
-    #processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
-    processing = await bot.send_message(
-        chat_id=update.chat.id,
-        text="<b>Processing... ⏳</b>",
-        parse_mode="html",
-        reply_to_message_id=update.message_id
-    )
+    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     print(update)
-    """
+    
     bypasser = lk21.Bypass()
     url = update.text
     if " * " in url:
-        url = update.text.split(" * ")[0]
+        url = url.split(" * ")[0]
     json = bypasser.bypass_url(url)
     formats = {
         "formats": []
@@ -53,8 +47,9 @@ async def dl_fembed(bot, update):
             "url": format["value"]
         }
         formats["formats"].append(aux)
-    await fembed.download(bot, processing, formats)
-    """
+    await processing.delete(True)
+    await fembed.download(bot, update, formats)
+    
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
     # test 👇
