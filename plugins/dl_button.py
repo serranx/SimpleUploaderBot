@@ -100,6 +100,9 @@ async def ddl_call_back(bot, update):
             )
             return False
     if os.path.exists(download_directory):
+      save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.message.chat.id) + ".json"
+        if os.path.exists(save_ytdl_json_path):
+            os.remove(save_ytdl_json_path)
         end_one = datetime.now()
         await bot.edit_message_text(
             text=Translation.UPLOAD_START,
@@ -141,8 +144,8 @@ async def ddl_call_back(bot, update):
                     )
                 )
             elif tg_send_type == "file":
-                  thumb_image_path = await Gthumb01(bot, update)
-                  await bot.send_document(
+                thumb_image_path = await Gthumb01(bot, update)
+                await bot.send_document(
                     chat_id=update.message.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
@@ -156,9 +159,9 @@ async def ddl_call_back(bot, update):
                     )
                 )
             elif tg_send_type == "vm":
-                 width, duration = await Mdata02(download_directory)
-                 thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                 await bot.send_video_note(
+                width, duration = await Mdata02(download_directory)
+                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                await bot.send_video_note(
                     chat_id=update.message.chat.id,
                     video_note=download_directory,
                     duration=duration,
@@ -173,9 +176,9 @@ async def ddl_call_back(bot, update):
                     )
                 )
             elif tg_send_type == "video":
-                 width, height, duration = await Mdata01(download_directory)
-                 thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                 await bot.send_video(
+                width, height, duration = await Mdata01(download_directory)
+                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                await bot.send_video(
                     chat_id=update.message.chat.id,
                     video=download_directory,
                     caption=description,
@@ -228,13 +231,6 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
         content_type = response.headers["Content-Type"]
         if "text" in content_type and total_length < 500:
             return await response.release()
-        await bot.edit_message_text(
-            chat_id,
-            message_id,
-            text="""Initiating Download
-URL: {}
-File Size: {}""".format(url, humanbytes(total_length))
-        )
         with open(file_name, "wb") as f_handle:
             while True:
                 chunk = await response.content.read(Config.CHUNK_SIZE)
