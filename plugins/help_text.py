@@ -35,6 +35,7 @@ async def dl_fembed(bot, update):
         parse_mode="html",
         reply_to_message_id=update.message_id
     )
+    print(processing)
     
     bypasser = lk21.Bypass()
     url = update.text
