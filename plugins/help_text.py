@@ -32,7 +32,7 @@ async def dl_fembed(bot, update):
     bypasser = lk21.Bypass()
     url = None
     if " * " in update.text:
-        url = update.text.split[0]
+        url = update.text.split(" * ")[0]
     json = bypasser.bypass_url(url)
     formats = {
         "formats": []
