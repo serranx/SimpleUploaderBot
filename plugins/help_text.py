@@ -31,7 +31,7 @@ async def dl_fembed(bot, update):
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     bypasser = lk21.Bypass()
     url = update.text
-    if " * " in update.text:
+    if " * " in url:
         url = update.text.split(" * ")[0]
     json = bypasser.bypass_url(url)
     formats = {
@@ -44,8 +44,7 @@ async def dl_fembed(bot, update):
             "format": format["key"].split("/")[0],
             "url": format["value"]
         }
-        aux2 = formats["formats"]
-        aux2.append(aux)
+        formats["formats"].append(aux)
     fembed.download(bot, processing, formats)
 
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
