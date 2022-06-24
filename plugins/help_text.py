@@ -31,7 +31,7 @@ async def dl_fembed(bot, update):
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     
     bypasser = lk21.Bypass()
-    if " * " in url:
+    if " * " in update.text:
         url = url.split(" * ")[0]
         if "www." in url:
             url = url.split("www.")[0] + url.split("www.")[1]
