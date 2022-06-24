@@ -70,14 +70,14 @@ async def download(bot, update, formats):
                 youtube_dl_url,
                 download_directory,
                 update.chat.id,
-                update.message_id,
+                msg_info.message_id,
                 c_time
             )
         except asyncio.TimeoutError:
             await bot.edit_message_text(
                 text=Translation.SLOW_URL_DECED,
                 chat_id=update.chat.id,
-                message_id=update.message_id
+                message_id=msg_info.message_id
             )
             return False
     if os.path.exists(download_directory):
@@ -189,7 +189,7 @@ async def download(bot, update, formats):
             await bot.edit_message_text(
                 text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
                 chat_id=update.chat.id,
-                message_id=update.message_id,
+                message_id=msg_info.message_id,
                 disable_web_page_preview=True
             )
             logger.info("✅ " + custom_file_name)
@@ -199,10 +199,9 @@ async def download(bot, update, formats):
         await bot.edit_message_text(
             text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
             chat_id=update.chat.id,
-            message_id=update.message_id,
+            message_id=msg_info.message_id,
             disable_web_page_preview=True
         )
-
 
 async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
     downloaded = 0
