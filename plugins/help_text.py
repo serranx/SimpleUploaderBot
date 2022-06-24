@@ -29,12 +29,16 @@ import lk21
 @Clinton.on_message(filters.regex(pattern="fembed\.com/"))
 async def dl_fembed(bot, update):
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
-    print(update)
     
     bypasser = lk21.Bypass()
-    url = update.text
     if " * " in url:
         url = url.split(" * ")[0]
+        if "www." in url:
+            url = url.split("www.")[0] + url.split("www.")[1]
+    else:
+        url = update.text
+        if "www." in url:
+            url = url.split("www.")[0] + url.split("www.")[1]
     json = bypasser.bypass_url(url)
     formats = {
         "formats": []
@@ -111,7 +115,7 @@ async def cancel_process(bot,update):
             reply_to_message_id=update.message_id
         )
 
-@Clinton.on_message(filters.reply & filters.text)
+@Clinton.on_message(filters.private & filters.reply & filters.text)
 async def edit_caption(bot, update):
     try:
         await bot.send_cached_media(
