@@ -55,7 +55,7 @@ async def download(bot, update, formats):
         x_reponse = formats
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
-        response_json = x_reponse)
+        response_json = x_reponse
         save_ytdl_json_path = Config.DOWNLOAD_LOCATION + \
             "/" + str(update.from_user.id) + ".json"
         with open(save_ytdl_json_path, "w", encoding="utf8") as outfile:
