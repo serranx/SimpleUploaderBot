@@ -111,7 +111,7 @@ async def echo(bot, update):
         chat_id=update.chat.id,
         message_id=imog.message_id
     )
-    time.sleep(1)
+    time.sleep(1.5)
     e_response = stderr.decode().strip()
     # logger.info(e_response)
     t_response = stdout.decode().strip()
