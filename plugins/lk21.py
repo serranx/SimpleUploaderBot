@@ -27,7 +27,7 @@ from hachoir.parser import createParser
 # https://stackoverflow.com/a/37631799/4723940
 from PIL import Image
 
-async def ddl_call_back(bot, update):
+async def lk21_call_back(bot, update):
     #logger.info(update)
     cb_data = update.data
     # youtube_dl extractors
