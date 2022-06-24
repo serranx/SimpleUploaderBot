@@ -1,7 +1,6 @@
 class Translation(object):
     START_TEXT = """Hi {} 👋,
 I'm <b>Simple Uploader Bot! ✨</b>
-You can upload HTTP/HTTPS direct link, Using this bot! 💫
 
 <u>I can upload various kind of direct link formats such as:</u>
 
@@ -14,6 +13,12 @@ You can upload HTTP/HTTPS direct link, Using this bot! 💫
     and many other direct links!... 🥳
     
 <i><b>Note:</b> Support for Google Drive, MEGA and other links will be added soon.</i>
+
+<i>You have the ability to set custom captions and custom thumbnails for your uploads too! 💫</i>
+
+<b>So what are you waiting for!...
+
+Send me a direct link and I will upload it to telegram as a file/video.</b>
 
 /help for more details!"""
     ADD_CAPTION_HELP = """Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> and the text you wrote will be attached as the caption! 🤩
@@ -41,7 +46,10 @@ URL | filename | username | password"""
     SAVED_CUSTOM_THUMB_NAIL = "Custom video / file thumbnail saved. This image will be used in the video / file."
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
-    NO_VOID_FORMAT_FOUND = "ERROR...\n<b>YouTubeDL</b> said: {}"
+    NO_VOID_FORMAT_FOUND = """<b>I think you have entered an unaccessible url or a private url.</b>
+<i>Go check if you can access the content in the url from your browser first!</i>
+
+<b>YouTubeDL</b> said: {}"""
     HELP_USER = """<b>How to Use Me?</b> 🤔
 Follow these steps! 👇
     
