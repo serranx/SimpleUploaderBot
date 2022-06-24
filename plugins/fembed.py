@@ -172,7 +172,7 @@ async def download(bot, update, formats):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update,
+                        msg_info,
                         start_time
                     )
                 )
