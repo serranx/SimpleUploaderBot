@@ -69,41 +69,28 @@ async def download(bot, update, formats):
             for formats in response_json["formats"]:
                 format_id = formats.get("format_id")
                 format_string = formats.get("format_note")
+                direct_link = formats.get("url")
                 if format_string is None:
                     format_string = formats.get("format")
                 format_ext = formats.get("ext")
                 approx_file_size = ""
                 if "filesize" in formats:
                     approx_file_size = humanbytes(formats["filesize"])
-                cb_string_video = "{}|{}|{}".format(
-                    "video", format_id, format_ext)
-                cb_string_file = "{}|{}|{}".format(
-                    "file", format_id, format_ext)
+                cb_string_video = "{}*{}*{}*{}".format(
+                    "video", format_id, format_ext, direct_link)
+                cb_string_file = "{}*{}*{}*{}".format(
+                    "file", format_id, format_ext, direct_link)
                 if format_string is not None and not "audio only" in format_string:
-                    if len(format_string.split("-")) > 1:
-                        echo_vid = "🎥 video " + format_string.split("-")[0] + " " + approx_file_size
-                    else:
-                        echo_vid = "🎥 video " + format_ext + " " + approx_file_size
                     ikeyboard = [
                         InlineKeyboardButton(
-                            echo_vid,
+                            "🎥 video " + format_ext + " " + format_string + " " + approx_file_size,
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
-                            "📄 file " + format_ext + " " + approx_file_size,
+                            "📄 file " + format_ext + " " + format_string + " " + approx_file_size,
                             callback_data=(cb_string_file).encode("UTF-8")
                         )
                     ]
-                    """if duration is not None:
-                        cb_string_video_message = "{}|{}|{}".format(
-                            "vm", format_id, format_ext)
-                        ikeyboard.append(
-                            InlineKeyboardButton(
-                                "VM",
-                                callback_data=(
-                                    cb_string_video_message).encode("UTF-8")
-                            )
-                        )"""
                 else:
                     # special weird case :\
                     ikeyboard = [
