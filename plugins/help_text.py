@@ -32,7 +32,7 @@ async def dl_fembed(bot, update):
     
     bypasser = lk21.Bypass()
     if " * " in update.text:
-        url = url.split(" * ")[0]
+        url = update.text.split(" * ")[0]
         if "www." in url:
             url = url.split("www.")[0] + url.split("www.")[1]
     else:
