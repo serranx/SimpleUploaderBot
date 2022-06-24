@@ -49,10 +49,12 @@ async def download(bot, update, formats):
     logger.info(custom_file_name)
     
     start = datetime.now()
-    await bot.edit_message_text(
-        text=Translation.DOWNLOAD_START.format(custom_file_name),
+    msg_info = await bot.send_message(
         chat_id=update.chat.id,
-        message_id=update.message_id
+        text=Translation.DOWNLOAD_START.format(custom_file_name),
+        reply_to_message_id=update.message_id,
+        parse_mode="html",
+        disable_web_page_preview=True
     )
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
@@ -86,7 +88,7 @@ async def download(bot, update, formats):
         await bot.edit_message_text(
             text=Translation.UPLOAD_START,
             chat_id=update.chat.id,
-            message_id=update.message_id
+            message_id=msg_info.message_id
         )
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
@@ -99,7 +101,7 @@ async def download(bot, update, formats):
             await bot.edit_message_text(
                 chat_id=update.chat.id,
                 text=Translation.RCHD_TG_API_LIMIT,
-                message_id=update.message_id
+                message_id=msg_info.message_id
             )
         else:
             # ref: message from @SOURCES_CODES
