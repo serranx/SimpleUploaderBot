@@ -246,7 +246,7 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
             humanbytes(total_length),
             humanbytes(speed),
             TimeFormatter(estimated_total_time),
-            custom_file_name
+            file_name.split("/")[-1]
         )
 
                         if current_message != display_message:
