@@ -1,184 +1,250 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# (c) Shrimadhav U K | X-Noid | @DC4_WARRIOR
+# (c) Shrimadhav U K | Modifieded By : @DC4_WARRIOR
 
 # the logging things
 import logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-import sys, requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, json, math
-
+import asyncio
+import aiohttp
+import json
+import math
+import os
+import shutil
+import time
+from datetime import datetime
+# the secret configuration specific things
 from config import Config
-from database.adduser import AddUser
+# the Strings used for this "thing"
 from translation import Translation
+from plugins.custom_thumbnail import *
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-from pyrogram import filters
-from pyrogram import Client as Clinton
-from database.access import clinton
-from helper_funcs.display_progress import humanbytes
-from helper_funcs.help_uploadbot import DownLoadFile
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.errors import UserNotParticipant
+# https://stackoverflow.com/a/37631799/4723940
+from PIL import Image
 
 async def download(bot, update, formats):
-    #imog = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
-    """
-    if os.path.exists(Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"):
-        await bot.edit_message_text(
-            text=Translation.WAIT_PROCESS_FINISH,
-            chat_id=update.chat.id,
-            message_id=imog.message_id
-        )
-        return False
-    """
-    file_name = None
-    url = update.text
-    if " * " in url:
-        url_parts = url.split(" * ")
+    #logger.info(update)
+    #cb_data = update.data
+    # youtube_dl extractors
+    tg_send_type, youtube_dl_format, youtube_dl_ext, youtube_dl_url = ["video", formats["formats"][0]["format"], formats["formats"][0]["ext"], formats["formats"][0]["url"]]
+    #youtube_dl_url = update.message.reply_to_message.text
+    thumb_image_path = Config.DOWNLOAD_LOCATION + \
+        "/" + str(update.from_user.id) + ".jpg"
+    custom_file_name = os.path.basename(youtube_dl_url)
+    if " * " in update.text:
+        url_parts = update.text.split(" * ")
         if len(url_parts) == 2:
-            file_name = url_parts[1]
-        if file_name is not None:
-            file_name = file_name.strip()
-    """
+            #youtube_dl_url = url_parts[0]
+            custom_file_name = url_parts[1]
+    
+    description = custom_file_name
+    if not "." + youtube_dl_ext in custom_file_name:
+        custom_file_name += '.' + youtube_dl_ext
+    logger.info(youtube_dl_url)
+    logger.info(custom_file_name)
+    
+    start = datetime.now()
     await bot.edit_message_text(
-        text="<b>Processing... ⌛</b>",
+        text=Translation.DOWNLOAD_START.format(custom_file_name),
         chat_id=update.chat.id,
-        message_id=update.message.message_id
+        message_id=update.message_id
     )
-    time.sleep(1)
-    """
-    if formats:
-        x_reponse = formats
-        if "\n" in x_reponse:
-            x_reponse, _ = x_reponse.split("\n")
-        response_json = x_reponse
-        save_ytdl_json_path = Config.DOWNLOAD_LOCATION + \
-            "/" + str(update.from_user.id) + ".json"
-        with open(save_ytdl_json_path, "w", encoding="utf8") as outfile:
-            json.dump(response_json, outfile, ensure_ascii=False)
-        # logger.info(response_json)
-        inline_keyboard = []
-        duration = None
-        if "duration" in response_json:
-            duration = response_json["duration"]
-        if "formats" in response_json:
-            for formats in response_json["formats"]:
-                format_id = formats.get("format_id")
-                format_string = formats.get("format_note")
-                direct_link = formats.get("url")
-                if format_string is None:
-                    format_string = formats.get("format")
-                format_ext = formats.get("ext")
-                approx_file_size = ""
-                if "filesize" in formats:
-                    approx_file_size = humanbytes(formats["filesize"])
-                cb_string_video = "{}*{}*{}*{}".format(
-                    "video", format_id, format_ext, direct_link)
-                cb_string_file = "{}*{}*{}*{}".format(
-                    "file", format_id, format_ext, direct_link)
-                if format_string is not None and not "audio only" in format_string:
-                    ikeyboard = [
-                        InlineKeyboardButton(
-                            "🎥 video " + format_ext + " " + format_string + " " + approx_file_size,
-                            callback_data=(cb_string_video).encode("UTF-8")
-                        ),
-                        InlineKeyboardButton(
-                            "📄 file " + format_ext + " " + format_string + " " + approx_file_size,
-                            callback_data=(cb_string_file).encode("UTF-8")
-                        )
-                    ]
-                else:
-                    # special weird case :\
-                    ikeyboard = [
-                        InlineKeyboardButton(
-                            "🎥 video - " + format_ext,
-                            callback_data=(cb_string_video).encode("UTF-8")
-                        ),
-                        InlineKeyboardButton(
-                            "📄 file - " + format_ext,
-                            callback_data=(cb_string_file).encode("UTF-8")
-                        )
-                    ]
-                inline_keyboard.append(ikeyboard)
-            if duration is not None:
-                cb_string_64 = "{}|{}|{}".format("audio", "64k", "mp3")
-                cb_string_128 = "{}|{}|{}".format("audio", "128k", "mp3")
-                cb_string = "{}|{}|{}".format("audio", "320k", "mp3")
-                inline_keyboard.append([
-                    InlineKeyboardButton(
-                        "🎧 MP3 " + "(" + "64 kbps" + ")", callback_data=cb_string_64.encode("UTF-8")),
-                    InlineKeyboardButton(
-                        "🎧 MP3 " + "(" + "128 kbps" + ")", callback_data=cb_string_128.encode("UTF-8"))
-                ])
-                inline_keyboard.append([
-                    InlineKeyboardButton(
-                        "🎧 MP3 " + "(" + "320 kbps" + ")", callback_data=cb_string.encode("UTF-8"))
-                ])
-        else:
-            format_id = response_json["format_id"]
-            format_ext = response_json["ext"]
-            cb_string_file = "{}|{}|{}".format(
-                "file", format_id, format_ext)
-            cb_string_video = "{}|{}|{}".format(
-                "video", format_id, format_ext)
-            inline_keyboard.append([
-                InlineKeyboardButton(
-                    "🎥 video - " + format_ext,
-                    callback_data=(cb_string_video).encode("UTF-8")
-                ),
-                InlineKeyboardButton(
-                    "📄 file - " + format_ext,
-                    callback_data=(cb_string_file).encode("UTF-8")
-                )
-            ])
-            cb_string_file = "{}={}={}".format(
-                "file", format_id, format_ext)
-            cb_string_video = "{}={}={}".format(
-                "video", format_id, format_ext)
-            inline_keyboard.append([
-                InlineKeyboardButton(
-                    "🎥 video - " + format_ext,
-                    callback_data=(cb_string_video).encode("UTF-8")
-                ),
-                InlineKeyboardButton(
-                    "📃 file - " + format_ext,
-                    callback_data=(cb_string_file).encode("UTF-8")
-                )
-            ])
-        reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=Translation.FORMAT_SELECTION,
-            reply_markup=reply_markup,
-            parse_mode="html",
-            reply_to_message_id=update.message_id
-        )
-    else:
-        # fallback for nonnumeric port a.k.a seedbox.io
-        inline_keyboard = []
-        cb_string_file = "{}={}={}".format(
-            "file", "LFO", "NONE")
-        cb_string_video = "{}={}={}".format(
-            "video", "OFL", "ENON")
-        inline_keyboard.append([
-            InlineKeyboardButton(
-                "🎥 video",
-                callback_data=(cb_string_video).encode("UTF-8")
-            ),
-            InlineKeyboardButton(
-                "📄 file",
-                callback_data=(cb_string_file).encode("UTF-8")
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
+    if not os.path.isdir(tmp_directory_for_each_user):
+        os.makedirs(tmp_directory_for_each_user)
+    download_directory = tmp_directory_for_each_user + "/" + custom_file_name
+    command_to_exec = []
+    async with aiohttp.ClientSession() as session:
+        c_time = time.time()
+        try:
+            await download_coroutine(
+                bot,
+                session,
+                youtube_dl_url,
+                download_directory,
+                update.chat.id,
+                update.message_id,
+                c_time
             )
-        ])
-        reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await bot.send_message(
+        except asyncio.TimeoutError:
+            await bot.edit_message_text(
+                text=Translation.SLOW_URL_DECED,
+                chat_id=update.chat.id,
+                message_id=update.message_id
+            )
+            return False
+    if os.path.exists(download_directory):
+        save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.message.chat.id) + ".json"
+        if os.path.exists(save_ytdl_json_path):
+            os.remove(save_ytdl_json_path)
+        end_one = datetime.now()
+        await bot.edit_message_text(
+            text=Translation.UPLOAD_START,
             chat_id=update.chat.id,
-            text=Translation.FORMAT_SELECTION,
-            reply_markup=reply_markup,
-            parse_mode="html",
-            reply_to_message_id=update.message_id
+            message_id=update.message_id
         )
+        file_size = Config.TG_MAX_FILE_SIZE + 1
+        try:
+            file_size = os.stat(download_directory).st_size
+        except FileNotFoundError as exc:
+            download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
+            # https://stackoverflow.com/a/678242/4723940
+            file_size = os.stat(download_directory).st_size
+        if file_size > Config.TG_MAX_FILE_SIZE:
+            await bot.edit_message_text(
+                chat_id=update.chat.id,
+                text=Translation.RCHD_TG_API_LIMIT,
+                message_id=update.message_id
+            )
+        else:
+            # ref: message from @SOURCES_CODES
+            start_time = time.time()
+            # try to upload file
+            if tg_send_type == "audio":
+                duration = await Mdata03(download_directory)
+                thumb_image_path = await Gthumb01(bot, update)
+                await bot.send_audio(
+                    chat_id=update.chat.id,
+                    audio=download_directory,
+                    caption=description,
+                    duration=duration,
+                    thumb=thumb_image_path,
+                    reply_to_message_id=update.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update,
+                        start_time
+                    )
+                )
+            elif tg_send_type == "file":
+                thumb_image_path = await Gthumb01(bot, update)
+                await bot.send_document(
+                    chat_id=update.chat.id,
+                    document=download_directory,
+                    thumb=thumb_image_path,
+                    caption=description,
+                    reply_to_message_id=update.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update,
+                        start_time
+                    )
+                )
+            elif tg_send_type == "vm":
+                width, duration = await Mdata02(download_directory)
+                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                await bot.send_video_note(
+                    chat_id=update.chat.id,
+                    video_note=download_directory,
+                    duration=duration,
+                    length=width,
+                    thumb=thumb_image_path,
+                    reply_to_message_id=update.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update,
+                        start_time
+                    )
+                )
+            elif tg_send_type == "video":
+                width, height, duration = await Mdata01(download_directory)
+                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                await bot.send_video(
+                    chat_id=update.chat.id,
+                    video=download_directory,
+                    caption=description,
+                    duration=duration,
+                    width=width,
+                    height=height,
+                    supports_streaming=True,
+                    thumb=thumb_image_path,
+                    reply_to_message_id=update.message_id,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        Translation.UPLOAD_START,
+                        update,
+                        start_time
+                    )
+                )
+            else:
+                logger.info("Did this happen? :\\")
+            end_two = datetime.now()
+            try:
+                os.remove(download_directory)
+                os.remove(thumb_image_path)
+            except:
+                pass
+            time_taken_for_download = (end_one - start).seconds
+            time_taken_for_upload = (end_two - end_one).seconds
+            await bot.edit_message_text(
+                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
+                chat_id=update.chat.id,
+                message_id=update.message_id,
+                disable_web_page_preview=True
+            )
+            logger.info("✅ " + custom_file_name)
+            logger.info("✅ Downloaded in: " + str(time_taken_for_download))
+            logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
+    else:
+        await bot.edit_message_text(
+            text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
+            chat_id=update.chat.id,
+            message_id=update.message_id,
+            disable_web_page_preview=True
+        )
+
+
+async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
+    downloaded = 0
+    display_message = ""
+    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+        total_length = int(response.headers["Content-Length"])
+        content_type = response.headers["Content-Type"]
+        if "text" in content_type and total_length < 500:
+            return await response.release()
+        with open(file_name, "wb") as f_handle:
+            while True:
+                chunk = await response.content.read(Config.CHUNK_SIZE)
+                if not chunk:
+                    break
+                f_handle.write(chunk)
+                downloaded += Config.CHUNK_SIZE
+                now = time.time()
+                diff = now - start
+                if round(diff % 5.00) == 0 or downloaded == total_length:
+                    percentage = downloaded * 100 / total_length
+                    speed = downloaded / diff
+                    elapsed_time = round(diff) * 1000
+                    time_to_completion = round(
+                        (total_length - downloaded) / speed) * 1000
+                    estimated_total_time = elapsed_time + time_to_completion
+                    try:
+                        current_message = """**Download Status**
+URL: {}
+File Size: {}
+Downloaded: {}
+ETA: {}""".format(
+    url,
+    humanbytes(total_length),
+    humanbytes(downloaded),
+    TimeFormatter(estimated_total_time)
+)
+                        if current_message != display_message:
+                            await bot.edit_message_text(
+                                chat_id,
+                                message_id,
+                                text=current_message
+                            )
+                            display_message = current_message
+                    except Exception as e:
+                        logger.info(str(e))
+                        pass
+        return await response.release()
