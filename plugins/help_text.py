@@ -31,17 +31,16 @@ async def test(bot, update):
     msg_info = await bot.send_message(
         chat_id=update.chat.id,
         text="Test message...",
-        parse_mode="html",
-        disable_web_page_preview=True,
-        reply_to_message_id=update.message_id,
-        reply_markup=InlineKeyboardMarkup(
+        reply_markup=InlineKeyboardMarkup([
             [
                 InlineKeyboardButton(
                     "Cancel",
                     callback_data="cancel|abcd"
                 ),
             ],
-        )
+        ]),
+        parse_mode="html",
+        reply_to_message_id=update.message_id
     )
 
 @Clinton.on_message(filters.regex(pattern="fembed\.com/"))
