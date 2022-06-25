@@ -251,7 +251,15 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                             await bot.edit_message_text(
                                 chat_id,
                                 message_id,
-                                text=current_message
+                                text=current_message,
+                                reply_markup=InlineKeyboardMarkup([
+                                    [
+                                        InlineKeyboardButton(
+                                            "Cancel download",
+                                            callback_data="{}|{}".format("cancel", file_name)
+                                        ),
+                                    ],
+                                ]),
                             )
                             display_message = current_message
                     except Exception as e:
