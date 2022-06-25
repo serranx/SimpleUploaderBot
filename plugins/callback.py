@@ -12,13 +12,11 @@ from plugins.lk21 import lk21_call_back
 async def delt(bot, update):
     await update.message.delete(True)
 
-
 @Clinton.on_callback_query()
 async def button(bot, update):
     cb_data = update.data
     if "|" in cb_data:
         if "cancel" in cb_data.split("|")[0]:
-            print(cb_data)
             await bot.edit_message_text(
                 text="Download cancelled!",
                 chat_id=update.message.chat.id,
