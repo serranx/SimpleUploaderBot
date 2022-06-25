@@ -28,8 +28,11 @@ import lk21
 
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
-    msg_info = await update.reply_text(
-        "<b>Test message...</b>",
+    msg_info = await bot.send_message(
+        chat_id=update.chat.id,
+        text="Test message...",
+        parse_mode="html",
+        disable_web_page_preview=True,
         reply_to_message_id=update.message_id,
         reply_markup=InlineKeyboardMarkup(
             [
