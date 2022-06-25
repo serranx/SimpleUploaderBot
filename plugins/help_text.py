@@ -26,6 +26,21 @@ from . import fembed
 #from . import dl_button
 import lk21
 
+@Clinton.on_message(filters.private & filters.command(["test"]))
+async def test(bot, update):
+    msg_info = await update.reply_text(
+        "<b>Processing... ⏳</b>",
+        reply_to_message_id=update.message_id,
+        reply_markup=InlineKeyboardMarkup(
+            [
+                InlineKeyboardButton(
+                    "Cancel",
+                    callback_data="cancel " + file_name
+                ),
+            ],
+        )
+    )
+
 @Clinton.on_message(filters.regex(pattern="fembed\.com/"))
 async def dl_fembed(bot, update):
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
@@ -56,7 +71,6 @@ async def dl_fembed(bot, update):
     
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
-    # test 👇
     video_formats = ["mp4", "mkv", "webm"]
     audio_formats = ["mp3", "m4a"]
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
@@ -95,7 +109,7 @@ async def dl_mediafire(bot, update):
     await mediafire.download(bot, update)
 
 @Clinton.on_message(filters.private & filters.command(["cancel"]))
-async def cancel_process(bot,update):
+async def cancel_process(bot, update):
     save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"
     if os.path.exists(save_ytdl_json_path):
         os.remove(save_ytdl_json_path)
