@@ -29,15 +29,23 @@ import lk21
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
     path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + "/"
-    files = os.listdir(path)
-    joined_files = "\n".join(files)
-    print(joined_files)
-    await bot.send_message(
-        chat_id=update.chat.id,
-        text=str(joined_files),
-        parse_mode="html",
-        reply_to_message_id=update.message_id
-    )
+    try:
+        files = os.listdir(path)
+        joined_files = "\n".join(files)
+        print(joined_files)
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text=str(joined_files),
+            parse_mode="html",
+            reply_to_message_id=update.message_id
+        )
+    except:
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text="No files found.",
+            parse_mode="html",
+            reply_to_message_id=update.message_id
+        )
     """
     msg_info = await bot.send_message(
         chat_id=update.chat.id,
