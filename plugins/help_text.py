@@ -28,7 +28,7 @@ import lk21
 
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
-    path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id)
+    path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + "/"
     files = os.listdir(path)
     joined_files = "\n".join(files)
     print(joined_files)
