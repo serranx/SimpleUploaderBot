@@ -17,7 +17,15 @@ async def delt(bot, update):
 async def button(bot, update):
     cb_data = update.data
     if "|" in cb_data:
-        await youtube_dl_call_back(bot, update)
+        if "cancel" in cb_data.split("|")[0]:
+            print(cb_data)
+            await bot.edit_message_text(
+                text="Download cancelled!",
+                chat_id=update.chat.id,
+                message_id=update.message_id
+            )
+        else:
+            await youtube_dl_call_back(bot, update)
     elif "=" in cb_data:
         await ddl_call_back(bot, update)
     elif "*" in cb_data:
