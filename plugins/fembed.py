@@ -228,27 +228,23 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                         (total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
                     try:
-                        progress = "<b>Downloading to my server now...</b> 📥\n[{0}{1}]\n\n".format(
+                        progress = "<b>Downloading to my server now...</b> 📥\n[{0}{1}] {2}%⚡\n📁 <i>{3}</i>\n\n".format(
             ''.join(["●" for i in range(math.floor(percentage / 5))]),
-            ''.join(["○" for i in range(20 - math.floor(percentage / 5))])
+            ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
+            round(percentage, 2),
+            file_name.split("/")[-1]
         )
-                        current_message = progress + """🔹<b>Percentage ⚡:</b> {0}%
+                        current_message = progress + """🔹<b>Finished ✅:</b> {0} of {1}
 
-🔹<b>Finished ✅:</b> {1} of {2}
+🔹<b>Speed 🚀:</b> {2}/s
 
-🔹<b>Speed 🚀:</b> {3}/s
-
-🔹<b>Time left 🕒:</b> {4}
-
-🔹<b>File name 📂:</b> {5}
+🔹<b>Time left 🕒:</b> {3}
 
 <i><b>Note: </b>fembed links are very slow, so be patient.</i>""".format(
-            round(percentage, 2),
             humanbytes(downloaded),
             humanbytes(total_length),
             humanbytes(speed),
-            TimeFormatter(estimated_total_time),
-            file_name.split("/")[-1]
+            TimeFormatter(estimated_total_time)
         )
 
                         if current_message != display_message:
@@ -256,6 +252,17 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                                 chat_id,
                                 message_id,
                                 text=current_message
+                                """
+                                reply_markup=InlineKeyboardMarkup(
+                                    [
+                                        [
+                                            InlineKeyboardButton(
+                                                "Cancel",
+                                                callback_data="cancel " + file_name),
+                                        ],
+                                    ]
+                                )
+                                """
                             )
                             display_message = current_message
                     except Exception as e:
