@@ -58,14 +58,14 @@ async def download(bot, update):
                 dl_link,
                 download_directory,
                 update.chat.id,
-                update.message_id,
+                dl_info.message_id,
                 c_time
             )
         except asyncio.TimeoutError:
             await bot.edit_message_text(
                 text=Translation.SLOW_URL_DECED,
                 chat_id=update.chat.id,
-                message_id=update.message_id
+                message_id=dl_info.message_id
             )
             return False
     if os.path.exists(download_directory):
@@ -195,7 +195,6 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
         content_type = response.headers["Content-Type"]
         if "text" in content_type and total_length < 500:
             return await response.release()
-        
         with open(file_name, "wb") as f_handle:
             while True:
                 chunk = await response.content.read(Config.CHUNK_SIZE)
@@ -209,7 +208,39 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                     percentage = downloaded * 100 / total_length
                     speed = downloaded / diff
                     elapsed_time = round(diff) * 1000
-                    time_to_completion = round((total_length - downloaded) / speed) * 1000
+                    time_to_completion = round(
+                        (total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
+                    try:
+                        progress = "<b>Downloading to my server now...</b> 📥\n[{0}{1}]\n\n".format(
+            ''.join(["●" for i in range(math.floor(percentage / 5))]),
+            ''.join(["○" for i in range(20 - math.floor(percentage / 5))])
+        )
+                        current_message = progress + """🔹<b>Percentage ⚡:</b> {0}%
+
+🔹<b>Finished ✅:</b> {1} of {2}
+
+🔹<b>Speed 🚀:</b> {3}/s
+
+🔹<b>Time left 🕒:</b> {4}
+
+🔹<b>File name 📂:</b> {5}""".format(
+            round(percentage, 2),
+            humanbytes(downloaded),
+            humanbytes(total_length),
+            humanbytes(speed),
+            TimeFormatter(estimated_total_time),
+            file_name.split("/")[-1]
+        )
+
+                        if current_message != display_message:
+                            await bot.edit_message_text(
+                                chat_id,
+                                message_id,
+                                text=current_message
+                            )
+                            display_message = current_message
+                    except Exception as e:
+                        logger.info(str(e))
+                        pass
         return await response.release()
-    
