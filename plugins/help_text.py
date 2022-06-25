@@ -29,7 +29,7 @@ import lk21
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
     msg_info = await update.reply_text(
-        "<b>Processing... ⏳</b>",
+        "<b>Test message...</b>",
         reply_to_message_id=update.message_id,
         reply_markup=InlineKeyboardMarkup(
             [
