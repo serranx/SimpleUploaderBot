@@ -240,7 +240,9 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
 
 🔹<b>Time left 🕒:</b> {4}
 
-🔹<b>File name 📂:</b> {5}""".format(
+🔹<b>File name 📂:</b> {5}
+
+<i><b>Note: </b>fembed links are very slow, so be patient.</i>""".format(
             round(percentage, 2),
             humanbytes(downloaded),
             humanbytes(total_length),
