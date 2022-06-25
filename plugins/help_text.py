@@ -125,13 +125,16 @@ async def edit_caption(bot, update):
             caption=update.text
         )
     except:
-        await bot.send_cached_media(
-            chat_id=update.chat.id,
-            file_id=update.reply_to_message.document.file_id,
-            reply_to_message_id=update.message_id,
-            caption=update.text
-        )
-        
+        try:
+            await bot.send_cached_media(
+                chat_id=update.chat.id,
+                file_id=update.reply_to_message.document.file_id,
+                reply_to_message_id=update.message_id,
+                caption=update.text
+            )
+        except:
+            pass
+
 @Clinton.on_message(filters.private & filters.command(["help"]))
 async def help_user(bot, update):
     # logger.info(update)
