@@ -35,7 +35,7 @@ async def test(bot, update):
             [
                 InlineKeyboardButton(
                     "Cancel",
-                    callback_data="cancel " + file_name
+                    callback_data="cancel|abcd"
                 ),
             ],
         )
