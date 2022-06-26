@@ -35,7 +35,7 @@ async def download(bot, update, formats, source):
     custom_file_name = os.path.basename(youtube_dl_url)
     if " * " in update.text:
         url_parts = update.text.split(" * ")
-        if len(url_parts) == 2:
+        if len(url_parts) >= 2:
             #youtube_dl_url = url_parts[0]
             custom_file_name = url_parts[1]
     
