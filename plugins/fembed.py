@@ -241,10 +241,11 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
             humanbytes(downloaded),
             humanbytes(total_length),
             humanbytes(speed),
-            TimeFormatter(estimated_total_time)
+            TimeFormatter(time_to_completion)
         )
 
                         if current_message != display_message:
+                            """
                             await bot.edit_message_text(
                                 chat_id,
                                 message_id,
@@ -257,6 +258,12 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                                         ),
                                     ],
                                 ]),
+                            )
+                            """
+                            await bot.edit_message_text(
+                                chat_id,
+                                message_id,
+                                text=current_message
                             )
                             display_message = current_message
                     except Exception as e:
