@@ -230,7 +230,7 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
             humanbytes(downloaded),
             humanbytes(total_length),
             humanbytes(speed),
-            TimeFormatter(estimated_total_time),
+            TimeFormatter(time_to_completion),
             file_name.split("/")[-1]
         )
 
