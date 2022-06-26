@@ -68,7 +68,10 @@ async def dl_fembed(bot, update):
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     
     bypasser = lk21.Bypass()
+    source = -1
     if " * " in update.text:
+        if len(update.text.split(" * ")) == 3:
+            source = int(update.text.split(" * ")[2]) - 1
         url = update.text.split(" * ")[0]
         if "www." in url:
             url = url.split("www.")[0] + url.split("www.")[1]
@@ -89,7 +92,7 @@ async def dl_fembed(bot, update):
         }
         formats["formats"].append(aux)
     await processing.delete(True)
-    await fembed.download(bot, update, formats)
+    await fembed.download(bot, update, formats, source)
     
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
