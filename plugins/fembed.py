@@ -24,11 +24,11 @@ from hachoir.parser import createParser
 # https://stackoverflow.com/a/37631799/4723940
 from PIL import Image
 
-async def download(bot, update, formats):
+async def download(bot, update, formats, source):
     #logger.info(update)
     #cb_data = update.data
     # youtube_dl extractors
-    tg_send_type, youtube_dl_format, youtube_dl_ext, youtube_dl_url = ["video", formats["formats"][0]["format"], formats["formats"][0]["ext"], formats["formats"][-1]["url"]]
+    tg_send_type, youtube_dl_format, youtube_dl_ext, youtube_dl_url = ["video", formats["formats"][0]["format"], formats["formats"][0]["ext"], formats["formats"][source]["url"]]
     #youtube_dl_url = update.message.reply_to_message.text
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
         "/" + str(update.from_user.id) + ".jpg"
