@@ -1,8 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# (c) Shrimadhav U K
 
-# the logging things
 import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -19,6 +15,7 @@ async def progress_for_pyrogram(
     total,
     ud_type,
     message,
+    filename,
     start
 ):
     now = time.time()
@@ -34,10 +31,11 @@ async def progress_for_pyrogram(
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
 
-        progress = "[{0}{1}] {2}%⚡\n\n".format(
+        progress = "[{0}{1}] {2}%⚡\n📁 <i>{3}</i>\n\n".format(
             ''.join(["●" for i in range(math.floor(percentage / 5))]),
             ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
-            round(percentage, 2)
+            round(percentage, 2),
+            filename
         )
         tmp = progress + """🔹<b>Finished</b> ✅: {0} of {1}
 
