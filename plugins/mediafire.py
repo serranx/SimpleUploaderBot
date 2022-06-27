@@ -111,6 +111,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         dl_info,
+                        filename,
                         start_time
                     )
                 )
@@ -126,6 +127,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         dl_info,
+                        filename,
                         start_time
                     )
                 )
@@ -143,6 +145,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         dl_info,
+                        filename,
                         start_time
                     )
                 )
@@ -163,6 +166,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         dl_info,
+                        filename,
                         start_time
                     )
                 )
