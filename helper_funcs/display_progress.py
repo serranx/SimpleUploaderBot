@@ -10,11 +10,9 @@ logger = logging.getLogger(__name__)
 
 import math, os, time, shutil
 
-
 from config import Config
 # the Strings used for this "thing"
 from translation import Translation
-
 
 async def progress_for_pyrogram(
     current,
@@ -36,17 +34,21 @@ async def progress_for_pyrogram(
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
 
-        progress = "[{0}{1}]".format(
+        progress = "[{0}{1}] {2}%⚡\n\n".format(
             ''.join(["●" for i in range(math.floor(percentage / 5))]),
-            ''.join(["○" for i in range(20 - math.floor(percentage / 5))])
+            ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
+            round(percentage, 2)
         )
-        tmp = progress + "\n\n🔹<b>Percentage</b> ⚡: {0}\n\n🔹<b>Finished</b> ✅: {1} of {2}\n\n🔹<b>Speed</b> 🚀: {3}/s\n\n🔹<b>Time left</b> 🕒: {4}\n".format(
-            round(percentage, 2),
+        tmp = progress + """🔹<b>Finished</b> ✅: {0} of {1}
+
+🔹<b>Speed</b> 🚀: {2}/s
+
+🔹<b>Time left</b> 🕒: {3}""".format(
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
             # elapsed_time if elapsed_time != '' else "0 s",
-            estimated_total_time if estimated_total_time != '' else "0 s"
+            time_to_completion if time_to_completion != '' else "0 s"
         )
         try:
             await message.edit(
@@ -57,7 +59,6 @@ async def progress_for_pyrogram(
             )
         except:
             pass
-
 
 def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
@@ -71,7 +72,6 @@ def humanbytes(size):
         size /= power
         n += 1
     return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
-
 
 def TimeFormatter(milliseconds: int) -> str:
     seconds, milliseconds = divmod(int(milliseconds), 1000)
