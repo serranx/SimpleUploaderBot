@@ -28,7 +28,16 @@ async def download(bot, update, formats, source):
     #logger.info(update)
     #cb_data = update.data
     # youtube_dl extractors
-    tg_send_type, youtube_dl_format, youtube_dl_ext, youtube_dl_url = ["video", formats["formats"][0]["format"], formats["formats"][0]["ext"], formats["formats"][source]["url"]]
+    try:
+        tg_send_type, youtube_dl_format, youtube_dl_ext, youtube_dl_url = ["video", formats["formats"][0]["format"], formats["formats"][0]["ext"], formats["formats"][source]["url"]]
+    except:
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text="Invalid link!",
+            reply_to_message_id=update.message_id,
+            parse_mode="html",
+            disable_web_page_preview=True
+        )
     #youtube_dl_url = update.message.reply_to_message.text
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
         "/" + str(update.from_user.id) + ".jpg"
