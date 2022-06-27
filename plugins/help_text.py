@@ -83,14 +83,23 @@ async def dl_fembed(bot, update):
     formats = {
         "formats": []
     }
-    for format in json:
-        aux = {
-            "ext": format["key"].split("/")[1],
-            "format_id": format["key"].split("/")[0],
-            "format": format["key"].split("/")[0],
-            "url": format["value"]
-        }
-        formats["formats"].append(aux)
+    try:
+        for format in json:
+            aux = {
+                "ext": format["key"].split("/")[1],
+                "format_id": format["key"].split("/")[0],
+                "format": format["key"].split("/")[0],
+                "url": format["value"]
+            }
+            formats["formats"].append(aux)
+    except:
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text="Invalid link!",
+            reply_to_message_id=update.message_id,
+            parse_mode="html",
+            disable_web_page_preview=True
+        )
     await processing.delete(True)
     await fembed.download(bot, update, formats, source)
     
