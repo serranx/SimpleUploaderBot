@@ -1,8 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# (c) Shrimadhav U K
 
-# the logging things
 import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -105,7 +101,7 @@ async def dl_fembed(bot, update):
     
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
-    video_formats = ["mp4", "mkv", "webm"]
+    video_formats = ["mp4", "mkv", "webm", "avi", "wmv"]
     audio_formats = ["mp3", "m4a"]
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     if " * " in update.text:
@@ -123,7 +119,7 @@ async def dl_mediafire(bot, update):
       r = await mediafire.get(url)
       dl_link, filename = r.split("|")
       dl_ext = filename.split(".")[-1]
-      filename = custom_filename + "." + dl_ext
+      filename = custom_filename
     else:
       url = update.text
       if re.search("download[0-9]*\.mediafire\.com", url):
