@@ -46,7 +46,7 @@ async def progress_for_pyrogram(
             humanbytes(total),
             humanbytes(speed),
             # elapsed_time if elapsed_time != '' else "0 s",
-            time_to_completion if time_to_completion != '' else "0 s"
+            TimeFormatter(time_to_completion) if time_to_completion != '' else "0 s"
         )
         try:
             await message.edit(
