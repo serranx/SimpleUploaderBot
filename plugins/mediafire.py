@@ -37,6 +37,9 @@ async def download(bot, update):
     cb_data = update.data
     send_type, dl_link, ext, filename = cb_data.split("|")
     print(update)
+    description = filename
+    if not "." + ext in filename:
+        filename += '.' + ext
     start = datetime.now()
     dl_info = await bot.send_message(
         chat_id=update.chat.id,
@@ -100,7 +103,7 @@ async def download(bot, update):
                 await bot.send_audio(
                     chat_id=update.chat.id,
                     audio=download_directory,
-                    caption=filename,
+                    caption=description,
                     duration=duration,
                     thumb=thumb_image_path,
                     reply_to_message_id=update.message_id,
@@ -117,7 +120,7 @@ async def download(bot, update):
                     chat_id=update.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
-                    caption=filename,
+                    caption=description,
                     reply_to_message_id=update.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -127,9 +130,9 @@ async def download(bot, update):
                     )
                 )
             elif send_type == "vm":
-                 width, duration = await Mdata02(download_directory)
-                 thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                 await bot.send_video_note(
+                width, duration = await Mdata02(download_directory)
+                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                await bot.send_video_note(
                     chat_id=update.chat.id,
                     video_note=download_directory,
                     duration=duration,
@@ -144,12 +147,12 @@ async def download(bot, update):
                     )
                 )
             elif send_type == "video":
-                 width, height, duration = await Mdata01(download_directory)
-                 thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                 await bot.send_video(
+                width, height, duration = await Mdata01(download_directory)
+                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                await bot.send_video(
                     chat_id=update.chat.id,
                     video=download_directory,
-                    caption=filename,
+                    caption=description,
                     duration=duration,
                     width=width,
                     height=height,
