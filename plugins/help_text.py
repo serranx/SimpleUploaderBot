@@ -38,27 +38,25 @@ async def dl_gdrive(bot, update):
           message_id=processing.message_id
         )
       r = await googledrive.get(url)
-      #dl_link, filename = r.split("|")
-      #dl_ext = filename.split(".")[-1]
+      dl_link, filename = r.split("|")
+      dl_ext = filename.split(".")[-1]
       filename = custom_filename
     else:
       url = update.text
       r = await googledrive.get(url)
-      #dl_link, filename = r.split("|")
-      #dl_ext = filename.split(".")[-1]
-    '''
+      dl_link, filename = r.split("|")
+      dl_ext = filename.split(".")[-1]
+    
     if dl_ext in video_formats:
       send_type = "video"
     elif dl_ext in audio_formats:
       send_type = "audio"
     else:
       send_type = "file"
-    '''
-    #update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
+    
+    update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
     await processing.delete(True)
-    print(r)
-    await update.reply(r)
-    #await mediafire.download(bot, update)
+    await mediafire.download(bot, update)
 
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
