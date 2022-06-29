@@ -19,44 +19,8 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import mediafire
 from . import fembed
-from . import googledrive
 #from . import dl_button
 import lk21
-
-@Clinton.on_message(filters.regex(pattern="drive\.google"))
-async def dl_gdrive(bot, update):
-    video_formats = ["mp4", "mkv", "webm", "avi", "wmv"]
-    audio_formats = ["mp3", "m4a"]
-    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
-    if " * " in update.text:
-      try:
-        url, custom_filename = update.text.split(" * ")
-      except:
-        await bot.edit_message_text(
-          text=Translation.INCORRECT_REQUEST,
-          chat_id=update.chat.id,
-          message_id=processing.message_id
-        )
-      r = await googledrive.get(url)
-      dl_link, filename = r.split("|")
-      dl_ext = filename.split(".")[-1]
-      filename = custom_filename
-    else:
-      url = update.text
-      r = await googledrive.get(url)
-      dl_link, filename = r.split("|")
-      dl_ext = filename.split(".")[-1]
-    
-    if dl_ext in video_formats:
-      send_type = "video"
-    elif dl_ext in audio_formats:
-      send_type = "audio"
-    else:
-      send_type = "file"
-    
-    update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
-    await processing.delete(True)
-    await mediafire.download(bot, update)
 
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
