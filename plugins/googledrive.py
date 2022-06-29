@@ -20,9 +20,9 @@ async def get(url):
     req = requests.get(url)
     sp = BeautifulSoup(req.text,"html.parser")
     file_name = sp.find("a").get_text()
-    file_id = url.split("/")[-2]
+    file_id = url.split("/")[-1]
     file_url = get_direct_url(file_id)
-    return {"file_name":file_name, "file_id":file_id, "file_url":file_url}
+    return "{}|{}".format(file_url, filename)
     
 def get_direct_url(id):
     URL = "https://docs.google.com/uc?export=download"
