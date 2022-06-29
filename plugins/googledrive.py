@@ -22,7 +22,7 @@ async def get(url):
     file_name = sp.find("a").get_text()
     file_id = url.split("/")[-1]
     file_url = get_direct_url(file_id)
-    return "{}|{}".format(file_url, filename)
+    return "{}|{}".format(file_url, file_name)
     
 def get_direct_url(id):
     URL = "https://docs.google.com/uc?export=download"
