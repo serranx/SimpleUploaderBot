@@ -38,13 +38,13 @@ async def dl_gdrive(bot, update):
           message_id=processing.message_id
         )
       r = await googledrive.get(url)
-      dl_link, filename = r.split("|")
+      #dl_link, filename = r.split("|")
       #dl_ext = filename.split(".")[-1]
       filename = custom_filename
     else:
       url = update.text
       r = await googledrive.get(url)
-      dl_link, filename = r.split("|")
+      #dl_link, filename = r.split("|")
       #dl_ext = filename.split(".")[-1]
     if dl_ext in video_formats:
       send_type = "video"
