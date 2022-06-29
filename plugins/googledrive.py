@@ -17,22 +17,23 @@ from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 
 async def get(url):
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '3600',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
-        }
+    req = requests.get(url)
+    sp = BeautifulSoup(req.text,"html.parser")
+    file_name = sp.find("meta", {"property": "og:title"}).attrs["content"]
+    file_id = url.split("/")[-2]
+    file_url = get_direct_url(file_id)
+    return {"file_name":file_name, "file_id":file_id, "file_url":file_url}
     
-    req = requests.get(url, headers)
-    soup = BeautifulSoup(req.content, 'html.parser')
-    
-    dl_url = soup.find("a", class_="popsok").get('href')
-    filename = soup.find("div", class_="filename").get_text()
-    
-    return "{}|{}".format(dl_url, filename)
-    
+def get_direct_url(id):
+    URL = "https://docs.google.com/uc?export=download"
+    session = requests.Session()
+    response = session.get(URL, params = { 'id' : id }, stream = True)
+    try:
+        if response.url:
+            return response.url
+    except:pass
+    return None
+
 async def download(bot, update):
     cb_data = update.data
     send_type, dl_link, ext, filename = cb_data.split("|")
