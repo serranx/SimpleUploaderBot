@@ -9,7 +9,7 @@ I'm <b>Simple Uploader Bot! ✨</b>
     3. YouTube links
     4. Seedr links
     5. Mediafire links
-    6. Fembed links (<code>fembed.com</code> domain, fase beta)
+    6. Fembed links (<code>fembed.com</code> domain)
     and many other direct links!... 🥳
     
 <i><b>Note:</b> Support for Google Drive, MEGA and other links will be added soon.</i>
