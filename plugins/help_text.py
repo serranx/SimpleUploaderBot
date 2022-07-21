@@ -69,12 +69,18 @@ async def dl_fembed(bot, update):
         if len(update.text.split(" * ")) == 3:
             source = int(update.text.split(" * ")[2]) - 1
         url = update.text.split(" * ")[0]
+        url = "https://fembed.com/f/" + url.split("/")[-1]
+        """
         if "www." in url:
             url = url.split("www.")[0] + url.split("www.")[1]
+        """
     else:
         url = update.text
+        url = "https://fembed.com/f/" + url.split("/")[-1]
+        """
         if "www." in url:
             url = url.split("www.")[0] + url.split("www.")[1]
+        """
     json = bypasser.bypass_url(url)
     formats = {
         "formats": []
