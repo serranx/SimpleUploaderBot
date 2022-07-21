@@ -59,7 +59,7 @@ async def test(bot, update):
     )
     """
 
-@Clinton.on_message(filters.regex(pattern="fembed\.com/"))
+@Clinton.on_message(filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|owodeuwu\.xyz"))
 async def dl_fembed(bot, update):
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     
