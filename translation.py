@@ -7,9 +7,8 @@ I'm <b>Simple Uploader Bot! ✨</b>
 1. MP4
 2. some M3U8 links
 3. YouTube links
-4. Seedr links
-5. Mediafire links
-6. Fembed links (<code>fembed.com</code> domain)
+4. Mediafire links
+5. Fembed links (<code>fembed.com</code> domain)
 and many other direct links!... 🥳
     
 <i><b>Note:</b> Support for Google Drive, MEGA and other links will be added soon.</i>
@@ -79,7 +78,7 @@ If you don't send a thumbnail the video/file will be uploaded with an auto genar
 The thumbnail you send will be used for your next uploads!
 
 Press /delthumbnail if you want to delete the previously saved thumbnail.
-(then the video will be uploaded with an auto-genarated thumbnail!)
+(then the video will be uploaded with an auto-genarated thumbnail)
 
 <b>3. Select the button</b>
 
@@ -88,7 +87,7 @@ Press /delthumbnail if you want to delete the previously saved thumbnail.
    
 <b>Special feature: 👉 Set caption to any file you want! ✨</b>
 
-🔹 Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file as a reply to the file by selecting it (as replying to a message 😅) and the text you wrote will be attached as caption! 🤩
+🔹 Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> by selecting it (as replying to a message 😅) and the text you wrote will be attached as caption! 🤩
 
 Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>Send Like This! It's Easy</a> 🥳"""
     REPLY_TO_MEDIA_ALBUM_TO_GEN_THUMB = "Reply /generatecustomthumbnail to a media album, to generate custom thumbail."
