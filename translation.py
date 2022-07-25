@@ -4,13 +4,13 @@ I'm <b>Simple Uploader Bot! ✨</b>
 
 <u>I can upload various kind of direct link formats such as:</u>
 
-    1. MP4
-    2. some M3U8 links
-    3. YouTube links
-    4. Seedr links
-    5. Mediafire links
-    6. Fembed links (<code>fembed.com</code> domain)
-    and many other direct links!... 🥳
+1. MP4
+2. some M3U8 links
+3. YouTube links
+4. Seedr links
+5. Mediafire links
+6. Fembed links (<code>fembed.com</code> domain)
+and many other direct links!... 🥳
     
 <i><b>Note:</b> Support for Google Drive, MEGA and other links will be added soon.</i>
 
@@ -38,8 +38,8 @@ You can now send a new URL."""
     FORMAT_SELECTION = "<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>\n\n👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇\n(If your link is a video and if you want it as a streamable video select a video option. If you want your upload in document format select a file option)\n\n<b>Don't select other format options if it shows any!</b>"
     SET_CUSTOM_USERNAME_PASSWORD = """If you want to download premium videos, provide in the following format:
 URL | filename | username | password"""
-    DOWNLOAD_START = "<b>File detected: </b>{}\n\n<b>Downloading to my server now...</b> 📥\n\nPlease wait uploading will start as soon as possible 😎"
-    UPLOAD_START = "<b>Uploading to Telegram now...</b> 📤"
+    DOWNLOAD_START = "<b>File detected: </b>{}\n\n<b>Downloading to my server...</b> 📥\n\nPlease wait uploading will start as soon as possible 😎"
+    UPLOAD_START = "<b>Uploading to Telegram...</b> 📤"
     RCHD_TG_API_LIMIT = "<b>Downloaded in:</b> {} seconds.\n<b>Detected file size:</b> {}\n\nSorry. But, I cannot upload files greater than 2GB due to Telegram API limitations 😕."
     AFTER_SUCCESSFUL_UPLOAD_MSG = "👍 Thanks for using @SimpleUploaderBot."
     AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = "<b>Downloaded in:</b> {} seconds.\n<b>Uploaded in:</b> {} seconds."
