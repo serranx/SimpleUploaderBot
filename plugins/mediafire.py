@@ -220,7 +220,7 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                         (total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
                     try:
-                        progress = "<b>Downloading to my server now...</b> 📥\n[{0}{1}] {2}%\n📁 <i>{3}</i>\n\n".format(
+                        progress = "<b>Downloading to my server...</b> 📥\n[{0}{1}] {2}%\n📁 <i>{3}</i>\n\n".format(
             ''.join(["●" for i in range(math.floor(percentage / 5))]),
             ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
             round(percentage, 2),
