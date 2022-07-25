@@ -20,7 +20,7 @@ from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
 
-@Clinton.on_message(filters.private & filters.regex(pattern=".*http.*") & ~filters.regex(pattern="\.mediafire\.com") & ~filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|owodeuwu\.xyz|plusto\.link"))
+@Clinton.on_message(filters.private & filters.regex(pattern=".*http.*") & ~filters.regex(pattern="\.mediafire\.com") & ~filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|embedsito\.com|owodeuwu\.xyz|plusto\.link"))
 async def echo(bot, update):
     await AddUser(bot, update)
     imog = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
