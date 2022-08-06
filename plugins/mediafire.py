@@ -36,7 +36,6 @@ async def get(url):
 async def download(bot, update):
     cb_data = update.data
     send_type, dl_link, ext, filename = cb_data.split("|")
-    print(update)
     description = filename
     if not "." + ext in filename:
         filename += '.' + ext
