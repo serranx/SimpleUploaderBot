@@ -216,10 +216,8 @@ async def start(bot, update):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(
-                        "Source code ⚡", url="https://github.com/wywxz/SimpleUploaderBot"
-                    ),
-                    InlineKeyboardButton("Developer 👨‍⚖️", url="https://t.me/SimpleBotsChannel"),
+                    InlineKeyboardButton("Source code ⚡", url="https://github.com/wywxz/SimpleUploaderBot"),
+                    InlineKeyboardButton("Developer 👨‍⚖️", url="https://t.me/SimpleBotsX"),
                 ],
             ]
         ),
