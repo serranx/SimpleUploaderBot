@@ -97,7 +97,7 @@ async def download(bot, update, formats, source):
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT,
+                text=Translation.RCHD_TG_API_LIMIT.format(time_taken_for_download, humanbytes(file_size)),
                 message_id=msg_info.message_id
             )
         else:
