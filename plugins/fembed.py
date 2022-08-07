@@ -48,7 +48,8 @@ async def download(bot, update, formats, source):
     start = datetime.now()
     msg_info = await bot.send_message(
         chat_id=update.chat.id,
-        text=Translation.DOWNLOAD_START.format(custom_file_name),
+        text="<b>Fembed link detected...</b> ⌛",
+        #text=Translation.DOWNLOAD_START.format(custom_file_name),
         reply_to_message_id=update.message_id,
         parse_mode="html",
         disable_web_page_preview=True
