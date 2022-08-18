@@ -18,24 +18,25 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
         estimated_total_time = elapsed_time + time_to_completion
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
+        
+        current_message = Translation.DISPLAY_PROGRESS.format(
+            "".join(["●" for i in range(math.floor(percentage / 5))]),
+            "".join(["○" for i in range(20 - math.floor(percentage / 5))]),
+            round(percentage, 2),
+            filename,
+            humanbytes(current),
+            humanbytes(total),
+            humanbytes(speed),
+            TimeFormatter(time_to_completion) if time_to_completion != '' else "0 s"
+        )
         try:
-            current_message = Translation.UPLOAD_START + "\n" + Translation.DISPLAY_PROGRESS.format(
-                "".join(["●" for i in range(math.floor(percentage / 5))]),
-                "".join(["○" for i in range(20 - math.floor(percentage / 5))]),
-                round(percentage, 2),
-                filename,
-                humanbytes(current),
-                humanbytes(total),
-                humanbytes(speed),
-                TimeFormatter(time_to_completion) if time_to_completion != '' else "0 s"
-            )
-            if current_message != display_message:
-                await message.edit_text(
+            await message.edit(
+                text="{}\n{}".format(
+                    ud_type,
                     current_message
                 )
-                display_message = current_message
-        except Exception as e:
-            logger.info(str(e))
+            )
+        except:
             pass
 
 def humanbytes(size):
