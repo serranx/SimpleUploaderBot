@@ -2,55 +2,60 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import math, os, time, shutil
+import math, os, time, shutil, aiohttp
 from config import Config
 from translation import Translation
 
-async def progress_for_pyrogram(
-    current,
-    total,
-    ud_type,
-    message,
-    filename,
-    start
-):
+async def progress_for_pyrogram(current, total, ud_type, message, filename, start):
     now = time.time()
     diff = now - start
     if round(diff % 10.00) == 0 or current == total:
-        # if round(current / total * 100, 0) % 5 == 0:
         percentage = current * 100 / total
         speed = current / diff
         elapsed_time = round(diff) * 1000
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = elapsed_time + time_to_completion
-
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-
-        progress = "[{0}{1}] {2}%\n📁 <i>{3}</i>\n\n".format(
-            ''.join(["●" for i in range(math.floor(percentage / 5))]),
-            ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
+        
+        current_message = Translation.DISPLAY_PROGRESS.format(
+            "".join(["●" for i in range(math.floor(percentage / 5))]),
+            "".join(["○" for i in range(20 - math.floor(percentage / 5))]),
             round(percentage, 2),
-            filename
-        )
-        tmp = progress + """🔹<b>Finished</b> ✅: {0} of {1}
-🔹<b>Speed</b> 🚀: {2}/s
-🔹<b>Time left</b> 🕒: {3}""".format(
+            filename,
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
-            # elapsed_time if elapsed_time != '' else "0 s",
-            TimeFormatter(time_to_completion) if time_to_completion != '' else "0 s"
+            TimeFormatter(time_to_completion) if time_to_completion != "" else "0 s"
         )
         try:
-            await message.edit(
-                text="{}\n {}".format(
+            await message.edit_text(
+                "{}\n{}".format(
                     ud_type,
-                    tmp
+                    current_message
                 )
             )
-        except:
+            #time.sleep(4.25)
+        except Exception as e:
+            #logger.info(str(e))
             pass
+
+async def ContentDisposition(url):
+    session = aiohttp.ClientSession()
+    filename = None
+    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+        if "filename=" in response.headers["Content-Disposition"]:
+            filename = response.headers["Content-Disposition"].split("filename=")[-1].replace("\"", "")
+        filesize = int(response.headers["Content-Length"])
+        await session.close()
+    return filename, humanbytes(filesize)
+
+async def ContentLength(url):
+    session = aiohttp.ClientSession()
+    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+        filesize = int(response.headers["Content-Length"])
+        await session.close()
+    return humanbytes(filesize)
 
 def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
@@ -59,7 +64,7 @@ def humanbytes(size):
         return ""
     power = 2**10
     n = 0
-    Dic_powerN = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
+    Dic_powerN = {0: '', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
     while size > power:
         size /= power
         n += 1
@@ -76,4 +81,3 @@ def TimeFormatter(milliseconds: int) -> str:
         ((str(seconds) + "s, ") if seconds else "") + \
         ((str(milliseconds) + "ms, ") if milliseconds else "")
     return tmp[:-2]
-
