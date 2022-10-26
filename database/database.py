@@ -1,4 +1,3 @@
-# (c) @AbirHasan2005 | X-Noid | @DC4_WARRIOR
 
 import datetime
 import motor.motor_asyncio
@@ -12,7 +11,6 @@ class Database:
 
     def new_user(self, id):
         return dict(id=id, thumbnail=None)
-
 
     async def add_user(self, id):
         user = self.new_user(id)
