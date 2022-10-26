@@ -1,14 +1,12 @@
 
-# (c) @AbirHasan2005 | Modifieded By : @DC4_WARRIOR
-
-from pyrogram import Client as Clinton
+from pyrogram import Client
 from pyrogram import filters
 from config import Config
 from database.access import clinton
-from plugins.buttons import *
-@Clinton.on_message(filters.private & filters.command('total'))
-async def sts(c, m):
-    if m.from_user.id != Config.OWNER_ID:
+
+@Client.on_message(filters.command('total'))
+async def stats(bot, message):
+    if message.from_user.id != Config.OWNER_ID:
         return 
     total_users = await clinton.total_users_count()
-    await m.reply_text(text=f"<b>Total users:</b> {total_users}", quote=True)
+    await message.reply_text(text=f"<b>Total users:</b> {total_users}", quote=True)
