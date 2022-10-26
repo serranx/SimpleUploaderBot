@@ -1,14 +1,12 @@
 
-# (c) @AbirHasan2005 | X-Noid
-
 import traceback, datetime, asyncio, string, random, time, os, aiofiles, aiofiles.os
 from database.access import clinton
 from pyrogram import filters
 from pyrogram import Client as Clinton
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import FloodWait, InputUserDeactivated, UserIsBlocked, PeerIdInvalid
-
 from config import Config
+
 broadcast_ids = {}
 
 async def send_msg(user_id, message):
@@ -59,7 +57,6 @@ async def broadcast_(c, m):
     
     async with aiofiles.open('broadcast.txt', 'w') as broadcast_log_file:
         async for user in all_users:
-            
             sts, msg = await send_msg(
                 user_id = int(user['id']),
                 message = broadcast_msg
@@ -91,7 +88,6 @@ async def broadcast_(c, m):
     completed_in = datetime.timedelta(seconds=int(time.time()-start_time))
     
     await asyncio.sleep(3)
-    
     await out.delete()
     
     if failed == 0:
@@ -105,5 +101,4 @@ async def broadcast_(c, m):
             caption=f"broadcast completed in `{completed_in}`\n\nTotal users {total_users}.\nTotal done {done}, {success} success and {failed} failed.",
             quote=True
         )
-    
     await aiofiles.os.remove('broadcast.txt')
