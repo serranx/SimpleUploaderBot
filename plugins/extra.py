@@ -1,250 +1,268 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# (c) Shrimadhav U K | Modifieded By : @DC4_WARRIOR
 
-# the logging things
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import asyncio
-import aiohttp
-import json
-import math
-import os
-import shutil
-import time
-from datetime import datetime
-# the secret configuration specific things
+import os, re, random, string, json, requests
+from bs4 import BeautifulSoup
 from config import Config
-# the Strings used for this "thing"
 from translation import Translation
-from plugins.custom_thumbnail import *
+from pyrogram import filters
+from pyrogram import Client
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
-# https://stackoverflow.com/a/37631799/4723940
-from PIL import Image
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from helper_funcs.display_progress import ContentLength
+from . import googledrive
+from . import fembed
+from . import mediafire
+from . import streamtape
+import lk21
 
-async def lk21_call_back(bot, update):
-    #logger.info(update)
-    cb_data = update.data
-    # youtube_dl extractors
-    tg_send_type, youtube_dl_format, youtube_dl_ext, youtube_dl_url = cb_data.split("*")
-    #youtube_dl_url = update.message.reply_to_message.text
-    thumb_image_path = Config.DOWNLOAD_LOCATION + \
-        "/" + str(update.from_user.id) + ".jpg"
-    custom_file_name = os.path.basename(youtube_dl_url)
-    if " * " in update.message.reply_to_message.text:
-        url_parts = update.message.reply_to_message.text.split(" * ")
-        if len(url_parts) == 2:
-            #youtube_dl_url = url_parts[0]
-            custom_file_name = url_parts[1]
-    
-    description = custom_file_name
-    if not "." + youtube_dl_ext in custom_file_name:
-        custom_file_name += '.' + youtube_dl_ext
-    logger.info(youtube_dl_url)
-    logger.info(custom_file_name)
-    
-    start = datetime.now()
-    await bot.edit_message_text(
-        text=Translation.DOWNLOAD_START.format(custom_file_name),
-        chat_id=update.message.chat.id,
-        message_id=update.message.message_id
+@Client.on_message(filters.command("lk21"))
+async def lk21_test(bot, message):
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
     )
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
+    bypasser = lk21.Bypass()
+    try:
+        response = bypasser.bypass_url(message.text.split(" ")[-1])
+        await info_msg.edit_text(str(response))
+    except Exception as e:
+        await info_msg.edit_text(str(e))
+
+@Client.on_message(filters.regex(pattern="streamtape.com"))
+async def dl_streamtape(bot, message):
+    custom_file_name = None
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    if " * " in message.text:
+        try:
+            url, custom_file_name = message.text.split(" * ")
+        except:
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
+            )
+            return
+    else:
+        url = message.text
+    try:
+        dl_url = await streamtape.get_download_url(url)
+        if custom_file_name is None:
+            custom_file_name = os.path.basename(dl_url)
+        else:
+            custom_file_name += "." + os.path.basename(dl_url).split(".")[-1]
+    except Exception as e:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND + "\n\n" + str(e) + "\n\n" + "Link example: \n<code>https://streamtape.com/e/2rKKdYGyxpiZ31G</code>"
+        )
+        return
+    message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
+    await streamtape.download(bot, message, info_msg)
+    
+@Client.on_message(filters.regex(pattern="1fichier.com"))
+async def dl_1fichier(bot, message):
+    #url = "https://1fichier.com/?erugwlxdya6vgzq58hse"
+    custom_file_name = None
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    if " * " in message.text:
+        try:
+            url, custom_file_name = message.text.split(" * ")
+        except:
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
+            )
+            return
+    else:
+        url = message.text
+    try:
+        raw = requests.get(url, stream=True)
+        soup = BeautifulSoup(raw.text, "html.parser")
+        filename = soup.findAll("td", class_="normal")[1].get_text()
+        ext = filename.split(".")[-1]
+        if custom_file_name is None:
+            custom_file_name = filename
+        else:
+            custom_file_name += "." + ext
+        raw = requests.post(url, stream=True)
+        soup = BeautifulSoup(raw.text, "html.parser")
+        dl_url = soup.find("a", class_="ok").get("href")
+        if ext in Config.VIDEO_FORMATS:
+            send_type = "video"
+        elif ext in Config.AUDIO_FORMATS:
+            send_type = "audio"
+        else:
+            send_type = "file"
+        message.data = "{}|{}|{}".format(send_type, dl_url, custom_file_name)
+        await streamtape.download(bot, message, info_msg)
+    except Exception as e:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND + "\n\n" + str(e)
+        )
+        return
+
+@Client.on_message(filters.regex(pattern="drive.google.com"))
+async def dl_googledrive(bot, message):
+    custom_file_name = None
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    if " * " in message.text:
+        try:
+            url, custom_file_name = message.text.split(" * ")
+        except:
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
+            )
+            return
+    else:
+        url = message.text
+    if "folders" in url:
+        await info_msg.edit_text(
+            "<b>Sorry, but I can't upload folders 😕</b>"
+        )
+        return
+    try:
+        response_gd = await googledrive.get(url)
+    except:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND
+        )
+        return
+    file_title = response_gd["title"]
+    ext = response_gd["ext"]
+    if custom_file_name is not None:
+        if custom_file_name.endswith("." + ext):
+            filename = custom_file_name
+        else:
+            filename = custom_file_name + "." + ext
+    else:
+        filename = file_title
+    if ext in Config.VIDEO_FORMATS:
+        send_type = "video"
+    elif ext in Config.AUDIO_FORMATS:
+        send_type = "audio"
+    else:
+        send_type = "file"
+    message.data = "{}|{}|{}".format(send_type, url, filename)
+    await googledrive.download(bot, message, info_msg)
+
+@Client.on_message(filters.regex(pattern="fembed.com|fembed-hd.com|femax20.com|vanfem.com|suzihaza.com|embedsito.com|owodeuwu.xyz|plusto.link|watchse.icu"))
+async def dl_fembed(bot, message):
+    info_msg = await message.reply_text(
+        "<b>Processing... ⏳</b>", 
+        quote=True
+    )
+    bypasser = lk21.Bypass()
+    if " * " in message.text:
+        url = message.text.split(" * ")[0]
+        url = "https://fembed.com/f/" + url.split("/")[-1]
+    else:
+        url = message.text
+        url = "https://fembed.com/f/" + url.split("/")[-1]
+    response_fembed = bypasser.bypass_url(url)
+    formats = []
+    item_id = 0
+    try:
+        req = requests.get(url, stream=True)
+        soup = BeautifulSoup(req.content, "html.parser")
+        filename = soup.find("h1", class_="title").get_text()
+        filename = filename.split("." + filename.split(".")[-1])[0]
+        for item in response_fembed:
+            filesize = await ContentLength(item["value"])
+            formats.append({
+                "id": item_id,
+                "title": filename,
+                "format": item["key"].split("/")[0],
+                "ext": item["key"].split("/")[1],
+                "filesize": filesize,
+                "url": item["value"]
+            })
+            item_id += 1
+    except Exception as e:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND + "\n\n" + str(e)
+        )
+        return
+    inline_keyboard = []
+    json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
-    download_directory = tmp_directory_for_each_user + "/" + custom_file_name
-    command_to_exec = []
-    async with aiohttp.ClientSession() as session:
-        c_time = time.time()
-        try:
-            await download_coroutine(
-                bot,
-                session,
-                youtube_dl_url,
-                download_directory,
-                update.message.chat.id,
-                update.message.message_id,
-                c_time
+    save_ytdl_json_path = tmp_directory_for_each_user + "/" + json_name + ".json"
+    with open(save_ytdl_json_path, "w", encoding="utf8") as outfile:
+        json.dump(formats, outfile, ensure_ascii=False)
+    for item in formats:
+        cb_string_video = "{}|{}|{}|{}".format("fembed", "video", item["id"], json_name)
+        cb_string_file = "{}|{}|{}|{}".format("fembed", "file", item["id"], json_name)
+        inline_keyboard.append([
+            InlineKeyboardButton(
+                "🎥 video " + item["format"] + " " + item["filesize"],
+                callback_data=(cb_string_video).encode("UTF-8")
+            ),
+            InlineKeyboardButton(
+                "📄 file " + item["ext"] + " " + item["filesize"],
+                callback_data=(cb_string_file).encode("UTF-8")
             )
-        except asyncio.TimeoutError:
-            await bot.edit_message_text(
-                text=Translation.SLOW_URL_DECED,
-                chat_id=update.message.chat.id,
-                message_id=update.message.message_id
-            )
-            return False
-    if os.path.exists(download_directory):
-        save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.message.chat.id) + ".json"
-        if os.path.exists(save_ytdl_json_path):
-            os.remove(save_ytdl_json_path)
-        end_one = datetime.now()
-        await bot.edit_message_text(
-            text=Translation.UPLOAD_START,
-            chat_id=update.message.chat.id,
-            message_id=update.message.message_id
+        ])
+    try:
+        await info_msg.edit_text(
+            Translation.FORMAT_SELECTION,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard)
         )
-        file_size = Config.TG_MAX_FILE_SIZE + 1
+    except Exception as e:
+        await info_msg.edit_text(
+            str(e)
+        )
+        return
+    
+@Client.on_message(filters.regex(pattern="mediafire.com/"))
+async def dl_mediafire(bot, message):
+    custom_file_name = None
+    info_msg = await message.reply_text(
+        "<b>Processing... ⏳</b>",
+        quote=True
+    )
+    if " * " in message.text:
         try:
-            file_size = os.stat(download_directory).st_size
-        except FileNotFoundError as exc:
-            download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
-            # https://stackoverflow.com/a/678242/4723940
-            file_size = os.stat(download_directory).st_size
-        if file_size > Config.TG_MAX_FILE_SIZE:
-            await bot.edit_message_text(
-                chat_id=update.message.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT,
-                message_id=update.message.message_id
+            url, custom_file_name = message.text.split(" * ")
+        except:
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
             )
-        else:
-            # ref: message from @SOURCES_CODES
-            start_time = time.time()
-            # try to upload file
-            if tg_send_type == "audio":
-                duration = await Mdata03(download_directory)
-                thumb_image_path = await Gthumb01(bot, update)
-                await bot.send_audio(
-                    chat_id=update.message.chat.id,
-                    audio=download_directory,
-                    caption=description,
-                    duration=duration,
-                    thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Translation.UPLOAD_START,
-                        update.message,
-                        start_time
-                    )
-                )
-            elif tg_send_type == "file":
-                thumb_image_path = await Gthumb01(bot, update)
-                await bot.send_document(
-                    chat_id=update.message.chat.id,
-                    document=download_directory,
-                    thumb=thumb_image_path,
-                    caption=description,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Translation.UPLOAD_START,
-                        update.message,
-                        start_time
-                    )
-                )
-            elif tg_send_type == "vm":
-                width, duration = await Mdata02(download_directory)
-                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                await bot.send_video_note(
-                    chat_id=update.message.chat.id,
-                    video_note=download_directory,
-                    duration=duration,
-                    length=width,
-                    thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Translation.UPLOAD_START,
-                        update.message,
-                        start_time
-                    )
-                )
-            elif tg_send_type == "video":
-                width, height, duration = await Mdata01(download_directory)
-                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                await bot.send_video(
-                    chat_id=update.message.chat.id,
-                    video=download_directory,
-                    caption=description,
-                    duration=duration,
-                    width=width,
-                    height=height,
-                    supports_streaming=True,
-                    thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Translation.UPLOAD_START,
-                        update.message,
-                        start_time
-                    )
-                )
-            else:
-                logger.info("Did this happen? :\\")
-            end_two = datetime.now()
-            try:
-                os.remove(download_directory)
-                os.remove(thumb_image_path)
-            except:
-                pass
-            time_taken_for_download = (end_one - start).seconds
-            time_taken_for_upload = (end_two - end_one).seconds
-            await bot.edit_message_text(
-                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                chat_id=update.message.chat.id,
-                message_id=update.message.message_id,
-                disable_web_page_preview=True
-            )
-            logger.info("✅ " + custom_file_name)
-            logger.info("✅ Downloaded in: " + str(time_taken_for_download))
-            logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
+            return
     else:
-        await bot.edit_message_text(
-            text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
-            chat_id=update.message.chat.id,
-            message_id=update.message.message_id,
-            disable_web_page_preview=True
+        url = message.text
+    if re.search("download[0-9]*\.mediafire\.com", url):
+        url_parts = url.split("/")
+        url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
+    if "?dkey=" in url:
+        url = url.split("?dkey=")[0]
+    try:
+        dl_url, filename = await mediafire.get(url)
+    except Exception as e:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND + "\n\n" + str(e)
         )
-
-
-async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
-    downloaded = 0
-    display_message = ""
-    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
-        total_length = int(response.headers["Content-Length"])
-        content_type = response.headers["Content-Type"]
-        if "text" in content_type and total_length < 500:
-            return await response.release()
-        with open(file_name, "wb") as f_handle:
-            while True:
-                chunk = await response.content.read(Config.CHUNK_SIZE)
-                if not chunk:
-                    break
-                f_handle.write(chunk)
-                downloaded += Config.CHUNK_SIZE
-                now = time.time()
-                diff = now - start
-                if round(diff % 5.00) == 0 or downloaded == total_length:
-                    percentage = downloaded * 100 / total_length
-                    speed = downloaded / diff
-                    elapsed_time = round(diff) * 1000
-                    time_to_completion = round(
-                        (total_length - downloaded) / speed) * 1000
-                    estimated_total_time = elapsed_time + time_to_completion
-                    try:
-                        current_message = """**Download Status**
-URL: {}
-File Size: {}
-Downloaded: {}
-ETA: {}""".format(
-    url,
-    humanbytes(total_length),
-    humanbytes(downloaded),
-    TimeFormatter(estimated_total_time)
-)
-                        if current_message != display_message:
-                            await bot.edit_message_text(
-                                chat_id,
-                                message_id,
-                                text=current_message
-                            )
-                            display_message = current_message
-                    except Exception as e:
-                        logger.info(str(e))
-                        pass
-        return await response.release()
+        return
+    ext = filename.split(".")[-1]
+    if custom_file_name is not None:
+        if "\n" in custom_file_name:
+            filename = custom_file_name.split("\n")[0]
+        if custom_file_name.endswith("." + ext):
+            filename = custom_file_name
+        else:
+            filename = custom_file_name + "." + ext
+    if ext in Config.VIDEO_FORMATS:
+        send_type = "video"
+    elif ext in Config.AUDIO_FORMATS:
+        send_type = "audio"
+    else:
+        send_type = "file"
+    message.data = "{}|{}|{}".format(send_type, dl_url, filename)
+    await mediafire.download(bot, message, info_msg)
