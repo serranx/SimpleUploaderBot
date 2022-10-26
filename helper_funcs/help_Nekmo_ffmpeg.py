@@ -1,20 +1,12 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# (c) Shrimadhav U K
 
-# the logging things
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-
 import asyncio
 import os
 import time
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
-
 
 async def place_water_mark(input_file, output_file, water_mark_file):
     watermarked_file = output_file + ".watermark.png"
@@ -64,7 +56,6 @@ async def place_water_mark(input_file, output_file, water_mark_file):
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
     return output_file
-
 
 async def take_screen_shot(video_file, output_directory, ttl):
     # https://stackoverflow.com/a/13891070/4723940
@@ -130,7 +121,6 @@ async def cult_small_video(video_file, output_directory, start_time, end_time):
         return out_put_file_name
     else:
         return None
-
 
 async def generate_screen_shots(
     video_file,
