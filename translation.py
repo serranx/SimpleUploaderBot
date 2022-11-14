@@ -11,7 +11,6 @@ I'm <b>Simple Uploader Bot! ✨</b>
 5. Google Drive (if link is public)
 6. Fembed (<code>fembed.com</code> domain)
 7. Streamtape (beta)
-8. 1Fichier (beta, buggy)
 and many other direct links!... 🥳
     
 <i><b>Note:</b> Support for other links will be added soon.</i>
