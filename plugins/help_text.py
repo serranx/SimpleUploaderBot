@@ -103,7 +103,7 @@ async def start(bot, update):
             [
                 [
                     InlineKeyboardButton("Source code ⚡", url="https://github.com/wywxz/SimpleUploaderBot"),
-                    InlineKeyboardButton("Developer 👨‍⚖️", url="https://t.me/SimpleBotsX"),
+                    InlineKeyboardButton("Developer 👨‍⚖️", url="https://t.me/SimpIeBots"),
                 ],
             ]
         ),
