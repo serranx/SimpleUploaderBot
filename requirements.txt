@@ -1,4 +1,5 @@
 pyrogram==1.4.12
+ffmpeg
 yt-dlp
 motor
 dnspython
